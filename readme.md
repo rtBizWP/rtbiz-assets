@@ -18,7 +18,7 @@ The objective of this plugin is to help a business in its assets/hardware/invent
 - Comments
 - Device Image 
 
-###Notes:
+### Notes:
 
 - `Current user` will be author of the post.
 - Category for device types. To be selected by checkboxes. 
