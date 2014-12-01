@@ -10,6 +10,7 @@ The objective of this plugin is to help a business in its assets/hardware/invent
 - Serial Number	
 - Device Name	
 - Current User	
+- Is Assigned ?
 - Vendor 	
 - Invoice Number	
 - Purchase Date	
