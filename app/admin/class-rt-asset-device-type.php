@@ -63,6 +63,9 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 
 		public function hook(){
 			add_action( 'init', array( $this, 'register_device_type' ) );
+
+			add_filter("manage_edit-" . rtasset_attribute_taxonomy_name( $this->slug ) . "_columns", array( $this, 'add_stock_column_header' ) );
+			add_filter("manage_" . rtasset_attribute_taxonomy_name( $this->slug ) . "_custom_column", array( $this, 'add_stock_column_body' ), 10, 3);
 		}
 
 		public function register_device_type(){
@@ -70,7 +73,7 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 			$editor_cap = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'editor' );
 			$author_cap = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' );
 
-			register_taxonomy(rtasset_attribute_taxonomy_name( $this->slug ), array( RT_Asset_Module::$post_type ), array(
+			register_taxonomy( rtasset_attribute_taxonomy_name( $this->slug ), array( RT_Asset_Module::$post_type ), array(
 				'hierarchical' => false,
 				'labels' => $this->labels,
 				'show_ui' => true,
@@ -94,5 +97,37 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 			$device_types = array_unique( $device_types );
 			wp_set_post_terms( $post_id, $device_types, rtcrm_attribute_taxonomy_name( $this->slug ) );
 		}
+
+		function add_stock_column_header( $columns ) {
+			$columns['stock'] = __( 'In Stock' );
+			return $columns;
+		}
+
+		function add_stock_column_body($out, $column_name, $devicetype_id) {
+			$device_type = get_term( $devicetype_id, rtasset_attribute_taxonomy_name( $this->slug ) );
+			switch ($column_name) {
+				case 'stock':
+					$args = array(
+						'post_type' => RT_Asset_Module::$post_type,
+						 rtasset_attribute_taxonomy_name( $this->slug ) => $device_type->name,
+						'meta_query' => array(
+							array(
+								'key'     => '_rtbiz_is_assigned',
+								'value'   => 'true',
+							),
+						),
+					);
+					$stockquery = new WP_Query($args);
+					$stock = $device_type->count - $stockquery->found_posts;
+
+
+					$out .= "<a href='edit.php?rt_device-type=" . $device_type->slug .  "&post_type=" . RT_Asset_Module::$post_type . "&is_assigned=false'>" . $stock . "</a>";
+					break;
+				default:
+					break;
+			}
+			return $out;
+		}
+
 	}
 }
