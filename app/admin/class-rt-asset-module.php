@@ -100,31 +100,31 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 					'slug'        => 'asset-assigned',
 					'name'        => __( 'Assigned', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device healthy and is assigned to a user.', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #FDD7E4; color: red; border: 1px solid red; border-radius: 5px;',
+					'style'       => 'padding: 3px; background: #FDD7E4; color: red; border: 1px solid red; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 				array(
 					'slug'        => 'asset-unassigned',
 					'name'        => __( 'Unassigned', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device healthy and is not assigned to any user. ', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #99FF99; color: #006600; border: 1px solid #006600; border-radius: 5px;',
+					'style'       => 'padding: 3px; background: #99FF99; color: #006600; border: 1px solid #006600; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 				array(
 					'slug'        => 'asset-faulty',
 					'name'        => __( 'faulty', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Unassigned Device, not healthy, needs replacement', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;',
+					'style'       => 'padding: 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 				array(
 					'slug'        => 'asset-needfix',
 					'name'        => __( 'NeedFix', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Assigned Device, not healthy, needs replacement', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;',
+					'style'       => 'padding: 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 				array(
 					'slug'        => 'asset-expired',
 					'name'        => __( 'Expired', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device is out of warranty', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;',
+					'style'       => 'padding: 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 			);
 

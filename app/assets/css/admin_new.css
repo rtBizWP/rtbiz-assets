@@ -92,7 +92,7 @@ img.tips {
 	padding: 10px 10px;
 }
 
-.row_group input, .row_group select {
+.row_group input[type='text'], .row_group select {
 	width: 100%;
 	vertical-align: top;
 	margin: 0;

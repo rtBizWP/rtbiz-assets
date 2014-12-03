@@ -73,7 +73,21 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 			$editor_cap = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'editor' );
 			$author_cap = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' );
 
-			register_taxonomy( rtasset_attribute_taxonomy_name( $this->slug ), array( RT_Asset_Module::$post_type ), array( 'hierarchical' => false, 'labels' => $this->labels, 'show_ui' => true, 'query_var' => true, 'update_count_callback' => 'rtasset_update_post_term_count', 'rewrite' => array( 'slug' => rtasset_attribute_taxonomy_name( 'closing_reason' ) ), 'capabilities' => array( 'manage_terms' => $editor_cap, 'edit_terms' => $editor_cap, 'delete_terms' => $editor_cap, 'assign_terms' => $author_cap, ), ) );
+			register_taxonomy( rtasset_attribute_taxonomy_name( $this->slug ), array( RT_Asset_Module::$post_type ), array(
+				'hierarchical' => false,
+				'labels' => $this->labels,
+				'show_ui' => true,
+				'show_admin_column' => true,
+				'query_var' => true,
+				'update_count_callback' => 'rtasset_update_post_term_count',
+				'rewrite' => array( 'slug' => rtasset_attribute_taxonomy_name( $this->slug ) ),
+				'capabilities' => array(
+					'manage_terms' => $editor_cap,
+					'edit_terms' => $editor_cap,
+					'delete_terms' => $editor_cap,
+					'assign_terms' => $author_cap,
+				),
+			));
 		}
 
 		function save_closing_reason( $post_id, $newAsset ) {
@@ -87,7 +101,6 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 
 		function add_stock_column_header( $columns ) {
 			$columns['stock'] = __( 'In Stock' );
-
 			return $columns;
 		}
 
@@ -95,11 +108,15 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 			$device_type = get_term( $devicetype_id, rtasset_attribute_taxonomy_name( $this->slug ) );
 			switch ( $column_name ) {
 				case 'stock':
-					$args       = array( 'post_type' => RT_Asset_Module::$post_type, rtasset_attribute_taxonomy_name( $this->slug ) => $device_type->name, 'meta_query' => array( array( 'key' => '_rtbiz_is_assigned', 'value' => 'true', ), ), );
+					$args       = array(
+						'post_type' => RT_Asset_Module::$post_type,
+						rtasset_attribute_taxonomy_name( $this->slug ) => $device_type->name,
+						'post_status' => 'asset-assigned',
+					);
 					$stockquery = new WP_Query( $args );
 					$stock      = $device_type->count - $stockquery->found_posts;
 
-					$out .= "<a href='edit.php?rt_device-type=" . $device_type->slug . '&post_type=' . RT_Asset_Module::$post_type . "&is_assigned='false'>" . $stock . '</a>';
+					$out .= "<a href='edit.php?rt_device-type=" . $device_type->slug . '&post_type=' . RT_Asset_Module::$post_type . "&post_status=asset-unassigned'>" . $stock . '</a>';
 					break;
 				default:
 					break;

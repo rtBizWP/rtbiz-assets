@@ -24,6 +24,11 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 		 */
 		function __construct() {
 
+			// CPT List View
+			add_filter( 'manage_edit-' . RT_Asset_Module::$post_type . '_columns', array( $this, 'edit_custom_columns' ) );
+			add_filter( 'manage_edit-' . RT_Asset_Module::$post_type . '_sortable_columns', array( $this, 'sortable_column' ) );
+			add_action( 'manage_' . RT_Asset_Module::$post_type . '_posts_custom_column', array( $this, 'manage_custom_columns' ), 2 );
+
 			// CPT Edit/Add View
 			add_action( 'add_meta_boxes', array( $this, 'remove_meta_boxes' ), 10 );
 			add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 30 );
@@ -32,6 +37,91 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 			add_action( 'rt_asset_process_' . RT_Asset_Module::$post_type . '_meta', 'RT_Meta_Box_Assets_Info::save', 10, 2 );
 
 			add_action( 'wp_before_admin_bar_render', 'RT_Meta_Box_Assets_Info::custom_post_status_rendar', 10 );
+		}
+
+		/**
+		 * Edit Column list view on Tickets List view page
+		 *
+		 * @param $cols
+		 *
+		 * @since  0.1
+		 *
+		 * @return array
+		 */
+		public function edit_custom_columns( $cols ) {
+			global $rt_asset_device_type;
+			$columns = array();
+
+			$columns['cb']                                                                         = $cols['cb'];
+			$columns['title']                                                                      = $cols['title'];
+			$columns['rtasset_asset_status']                                                       = '<span class="status_head tips" data-tip="' . esc_attr__( 'Status', RT_ASSET_TEXT_DOMAIN ) . '">' . esc_attr__( 'Status', RT_ASSET_TEXT_DOMAIN ) . '</span>';
+			$columns[ 'taxonomy-' . rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ] = $cols[ 'taxonomy-' . rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ];
+			$columns['comments']                                                                   = $cols['comments'];
+			$columns['date']                                                                       = $cols['date'];
+
+			unset( $cols['cb'] );
+			unset( $cols['title'] );
+			unset( $cols['comments'] );
+			unset( $cols['date'] );
+			unset( $cols[ 'taxonomy-' . rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ] );
+
+			$columns = array_merge( $columns, $cols );
+
+			return $columns;
+		}
+
+		/**
+		 * Define new sortable columns for ticket list view
+		 *
+		 * @since 0.1
+		 *
+		 * @param $columns
+		 *
+		 * @return mixed
+		 */
+		function sortable_column( $columns ) {
+			global $rt_asset_device_type;
+			$columns['rtasset_asset_status']                                                       = 'post_status';
+			$columns[ 'taxonomy-' . rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ] = rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug );
+
+			return $columns;
+		}
+
+		/**
+		 * Edit Content of List view Columns
+		 *
+		 * @since  0.1
+		 *
+		 * @param $column
+		 */
+		function manage_custom_columns( $column ) {
+
+			global $post, $rt_asset_module;
+
+			switch ( $column ) {
+
+				case 'rtasset_asset_status' :
+					$post_status_list = $rt_asset_module->get_custom_statuses();
+					$post_status      = $post->post_status;
+					$style            = 'padding: 5px; border: 1px solid black; border-radius: 5px;';
+					$flag             = false;
+					foreach ( $post_status_list as $status ) {
+						if ( $status['slug'] == $post->post_status ) {
+							$post_status = $status['name'];
+							if ( ! empty( $status['style'] ) ) {
+								$style = $status['style'];
+							}
+							$flag = true;
+							break;
+						}
+					}
+					if ( ! $flag ) {
+						$post_status = ucfirst( $post->post_status );
+					}
+					printf( '<mark style="%s" class="%s tips" data-tip="%s">%s</mark>', $style, $post_status, esc_html__( $post_status, RT_HD_PATH_ADMIN ), esc_html__( $post_status, RT_HD_PATH_ADMIN ) );
+					break;
+
+			}
 		}
 
 
