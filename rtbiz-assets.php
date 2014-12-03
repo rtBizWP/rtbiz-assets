@@ -99,6 +99,7 @@ function rt_asset_init() {
 	global $rt_wp_ast;
 	$rt_wp_ast = new RT_WP_Assets();
 }
+
 add_action( 'rt_biz_init', 'rt_asset_init', 1 );
 
 /**
@@ -111,6 +112,6 @@ add_action( 'init', 'rtasset_check_plugin_dependecy' );
 
 
 register_activation_hook( __FILE__, 'init_call_flush_rewrite_rules' );
-function init_call_flush_rewrite_rules(){
+function init_call_flush_rewrite_rules() {
 	add_option( 'rtasset_flush_rewrite_rules', 'true' );
 }

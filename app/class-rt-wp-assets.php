@@ -55,9 +55,9 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 		function init_globals() {
 			global $rt_asset_module, $rt_asset_device_type, $rt_asset_cpt_assets, $rt_asset_dashboard, $rt_asset_acl;
 
-			$rt_asset_module    = new RT_Asset_Module();
+			$rt_asset_module      = new RT_Asset_Module();
 			$rt_asset_device_type = new RT_Asset_Device_Type();
-			$rt_asset_cpt_assets = new RT_Asset_CPT_Assets();
+			$rt_asset_cpt_assets  = new RT_Asset_CPT_Assets();
 
 			$rt_asset_dashboard = new RT_Asset_Dashboard();
 			$rt_asset_acl       = new RT_Asset_ACL();
@@ -95,6 +95,7 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 
 			$this->localize_scripts();
 		}
+
 		/**
 		 * This is functions localize values for JScript
 		 * @since 0.1

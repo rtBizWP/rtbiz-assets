@@ -48,49 +48,36 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 		 */
 		function get_custom_labels() {
 			$this->labels = array(
-				'name' => __( 'Device Type' ),
-				'search_items' => __( 'Search Device Type' ),
-				'all_items' => __('All Device Types'),
-				'edit_item' => __('Edit Device Type'),
-				'update_item' => __('Update Device Type'),
-				'add_new_item' => __('Add New Device Type'),
-				'new_item_name' => __('New Device Type'),
-				'menu_name' => __('Device Types'),
-				'choose_from_most_used' => __('Choose from the most used Device Types'),
+				'name' => __( 'Device Type', RT_ASSET_TEXT_DOMAIN ),
+				'search_items' => __( 'Search Device Type', RT_ASSET_TEXT_DOMAIN ),
+				'all_items' => __( 'All Device Types', RT_ASSET_TEXT_DOMAIN ),
+				'edit_item' => __( 'Edit Device Type', RT_ASSET_TEXT_DOMAIN ),
+				'update_item' => __( 'Update Device Type', RT_ASSET_TEXT_DOMAIN ),
+				'add_new_item' => __( 'Add New Device Type', RT_ASSET_TEXT_DOMAIN ),
+				'new_item_name' => __( 'New Device Type', RT_ASSET_TEXT_DOMAIN ),
+				'menu_name' => __( 'Device Types', RT_ASSET_TEXT_DOMAIN ),
+				'choose_from_most_used' => __( 'Choose from the most used Device Types', RT_ASSET_TEXT_DOMAIN ),
 			);
 			return $this->labels;
 		}
 
-		public function hook(){
+		public function hook() {
 			add_action( 'init', array( $this, 'register_device_type' ) );
 
-			add_filter("manage_edit-" . rtasset_attribute_taxonomy_name( $this->slug ) . "_columns", array( $this, 'add_stock_column_header' ) );
-			add_filter("manage_" . rtasset_attribute_taxonomy_name( $this->slug ) . "_custom_column", array( $this, 'add_stock_column_body' ), 10, 3);
+			add_filter( 'manage_edit-' . rtasset_attribute_taxonomy_name( $this->slug ) . '_columns', array( $this, 'add_stock_column_header' ) );
+			add_filter( 'manage_' . rtasset_attribute_taxonomy_name( $this->slug ) . '_custom_column', array( $this, 'add_stock_column_body' ), 10, 3 );
 		}
 
-		public function register_device_type(){
+		public function register_device_type() {
 
 			$editor_cap = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'editor' );
 			$author_cap = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' );
 
-			register_taxonomy( rtasset_attribute_taxonomy_name( $this->slug ), array( RT_Asset_Module::$post_type ), array(
-				'hierarchical' => false,
-				'labels' => $this->labels,
-				'show_ui' => true,
-				'query_var' => true,
-				'update_count_callback' => 'rtasset_update_post_term_count',
-				'rewrite' => array('slug' => rtasset_attribute_taxonomy_name('closing_reason')),
-				'capabilities' => array(
-					'manage_terms' => $editor_cap,
-					'edit_terms' => $editor_cap,
-					'delete_terms' => $editor_cap,
-					'assign_terms' => $author_cap,
-				),
-			));
+			register_taxonomy( rtasset_attribute_taxonomy_name( $this->slug ), array( RT_Asset_Module::$post_type ), array( 'hierarchical' => false, 'labels' => $this->labels, 'show_ui' => true, 'query_var' => true, 'update_count_callback' => 'rtasset_update_post_term_count', 'rewrite' => array( 'slug' => rtasset_attribute_taxonomy_name( 'closing_reason' ) ), 'capabilities' => array( 'manage_terms' => $editor_cap, 'edit_terms' => $editor_cap, 'delete_terms' => $editor_cap, 'assign_terms' => $author_cap, ), ) );
 		}
 
 		function save_closing_reason( $post_id, $newAsset ) {
-			if ( !isset( $newAsset[ $this->slug ] ) ) {
+			if ( ! isset( $newAsset[ $this->slug ] ) ) {
 				$newAsset[ $this->slug ] = array();
 			}
 			$device_types = array_map( 'intval', $newAsset[ $this->slug ] );
@@ -100,32 +87,24 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 
 		function add_stock_column_header( $columns ) {
 			$columns['stock'] = __( 'In Stock' );
+
 			return $columns;
 		}
 
-		function add_stock_column_body($out, $column_name, $devicetype_id) {
+		function add_stock_column_body( $out, $column_name, $devicetype_id ) {
 			$device_type = get_term( $devicetype_id, rtasset_attribute_taxonomy_name( $this->slug ) );
-			switch ($column_name) {
+			switch ( $column_name ) {
 				case 'stock':
-					$args = array(
-						'post_type' => RT_Asset_Module::$post_type,
-						 rtasset_attribute_taxonomy_name( $this->slug ) => $device_type->name,
-						'meta_query' => array(
-							array(
-								'key'     => '_rtbiz_is_assigned',
-								'value'   => 'true',
-							),
-						),
-					);
-					$stockquery = new WP_Query($args);
-					$stock = $device_type->count - $stockquery->found_posts;
+					$args       = array( 'post_type' => RT_Asset_Module::$post_type, rtasset_attribute_taxonomy_name( $this->slug ) => $device_type->name, 'meta_query' => array( array( 'key' => '_rtbiz_is_assigned', 'value' => 'true', ), ), );
+					$stockquery = new WP_Query( $args );
+					$stock      = $device_type->count - $stockquery->found_posts;
 
-
-					$out .= "<a href='edit.php?rt_device-type=" . $device_type->slug .  "&post_type=" . RT_Asset_Module::$post_type . "&is_assigned=false'>" . $stock . "</a>";
+					$out .= "<a href='edit.php?rt_device-type=" . $device_type->slug . '&post_type=' . RT_Asset_Module::$post_type . "&is_assigned='false'>" . $stock . '</a>';
 					break;
 				default:
 					break;
 			}
+
 			return $out;
 		}
 

@@ -67,8 +67,6 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 			wp_enqueue_script( 'jquery-tiptip', RT_ASSET_URL . 'app/assets/javascripts/jquery-tiptip/jquery.tipTip.js', array( 'jquery' ), RT_ASSET_VERSION, true );
 			wp_enqueue_script( 'rtasset-admin-js', RT_ASSET_URL . 'app/assets/javascripts/admin_new.js', array( 'jquery-tiptip' ), RT_ASSET_VERSION, true );
 
-
-
 			$this->localize_scripts();
 		}
 
@@ -84,7 +82,7 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 					$user_edit = true;
 				}
 				wp_localize_script( 'rtasset-admin-js', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-				$rtasset_post_type = isset( $_GET['post'] ) ? get_post_type( $_GET['post'] )  :'';
+				$rtasset_post_type = isset( $_GET['post'] ) ? get_post_type( $_GET['post'] ) : '';
 				wp_localize_script( 'rtasset-admin-js', 'rtasset_post_type', $rtasset_post_type );
 				wp_localize_script( 'rtasset-admin-js', 'rtasset_user_edit', array( $user_edit ) );
 			} else {

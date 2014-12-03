@@ -100,31 +100,31 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 					'slug'        => 'asset-assigned',
 					'name'        => __( 'Assigned', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device healthy and is assigned to a user.', RT_ASSET_TEXT_DOMAIN ),
-				    'style'       => 'padding: 5px; background: #FDD7E4; color: red; border: 1px solid red; border-radius: 5px;'
+					'style'       => 'padding: 5px; background: #FDD7E4; color: red; border: 1px solid red; border-radius: 5px;',
 				),
 				array(
 					'slug'        => 'asset-unassigned',
 					'name'        => __( 'Unassigned', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device healthy and is not assigned to any user. ', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #99FF99; color: #006600; border: 1px solid #006600; border-radius: 5px;'
+					'style'       => 'padding: 5px; background: #99FF99; color: #006600; border: 1px solid #006600; border-radius: 5px;',
 				),
 				array(
 					'slug'        => 'asset-faulty',
 					'name'        => __( 'faulty', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Unassigned Device, not healthy, needs replacement', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;'
+					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;',
 				),
 				array(
 					'slug'        => 'asset-needfix',
 					'name'        => __( 'NeedFix', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Assigned Device, not healthy, needs replacement', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;'
+					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;',
 				),
 				array(
 					'slug'        => 'asset-expired',
 					'name'        => __( 'Expired', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device is out of warranty', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;'
+					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;',
 				),
 			);
 
@@ -183,10 +183,10 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				'has_archive'        => true,
 				'rewrite'            => array(
 					'slug'       => strtolower( $this->labels['name'] ),
-				    'with_front' => false,
+					'with_front' => false,
 				),
 				'show_ui'            => true, // Show the UI in admin panel
-				'menu_icon'          => $settings['rtasset_logo_url']['url'],
+				'menu_icon'          => ! empty( $settings['rtasset_logo_url']['url'] ) ? $settings['rtasset_logo_url']['url'] : '',
 				'menu_position'      => $menu_position,
 				'supports'           => array( 'title', 'editor', 'comments', 'revisions', 'thumbnail' ),
 				'capability_type'    => self::$post_type,
@@ -236,7 +236,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		 */
 		function ticket_chnage_action_publish_update() {
 			global $pagenow, $post;
-			if ( get_post_type() == self::$post_type && (  'post.php' === $pagenow ||'edit.php' === $pagenow || 'post-new.php' === $pagenow || 'edit' == ( isset( $_GET['action'] ) && $_GET['action'] ) ) ) {
+			if ( get_post_type() == self::$post_type && ( 'post.php' === $pagenow || 'edit.php' === $pagenow || 'post-new.php' === $pagenow || 'edit' == ( isset( $_GET['action'] ) && $_GET['action'] ) ) ) {
 				if ( ! isset( $post ) ) {
 					return;
 				}
@@ -277,7 +277,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				$new_index = 5;
 				foreach ( $this->custom_menu_order as $item ) {
 					foreach ( $module_menu as $p_key => $menu_item ) {
-						$out = array_filter( $menu_item, function( $in ) { return true !== $in; } );
+						$out = array_filter( $menu_item, function ( $in ) {
+							return true !== $in;
+						} );
 						if ( in_array( $item, $out ) ) {
 							$submenu[ 'edit.php?post_type=' . self::$post_type ][ $new_index ] = $menu_item;
 							unset( $module_menu[ $p_key ] );
@@ -287,9 +289,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 					}
 				}
 				foreach ( $module_menu as $p_key => $menu_item ) {
-//					if ( $menu_item[2] != Redux_Framework_Helpdesk_Config::$page_slug ) {
-//						$menu_item[0] = '--- ' . $menu_item[0];
-//					}
+					//					if ( $menu_item[2] != Redux_Framework_Helpdesk_Config::$page_slug ) {
+					//						$menu_item[0] = '--- ' . $menu_item[0];
+					//					}
 					$submenu[ 'edit.php?post_type=' . self::$post_type ][ $new_index ] = $menu_item;
 					unset( $module_menu[ $p_key ] );
 					$new_index += 5;
