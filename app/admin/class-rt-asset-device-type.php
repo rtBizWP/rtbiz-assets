@@ -111,10 +111,10 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 					$args       = array(
 						'post_type' => RT_Asset_Module::$post_type,
 						rtasset_attribute_taxonomy_name( $this->slug ) => $device_type->name,
-						'post_status' => 'asset-assigned',
+						'post_status' => 'asset-unassigned',
 					);
 					$stockquery = new WP_Query( $args );
-					$stock      = $device_type->count - $stockquery->found_posts;
+					$stock      = $stockquery->found_posts;
 
 					$out .= "<a href='edit.php?rt_device-type=" . $device_type->slug . '&post_type=' . RT_Asset_Module::$post_type . "&post_status=asset-unassigned'>" . $stock . '</a>';
 					break;

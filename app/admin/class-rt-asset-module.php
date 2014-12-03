@@ -75,7 +75,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				'name'          => __( 'Asset', RT_ASSET_TEXT_DOMAIN ),
 				'singular_name' => __( 'Asset', RT_ASSET_TEXT_DOMAIN ),
 				'menu_name'     => isset( $settings['rtasset_menu_label'] ) ? $settings['rtasset_menu_label'] : 'rtAssets',
-				'all_items'     => __( 'Assets', RT_ASSET_TEXT_DOMAIN ),
+				'all_items'     => __( 'All Assets', RT_ASSET_TEXT_DOMAIN ),
 				'add_new'       => __( 'Add Asset', RT_ASSET_TEXT_DOMAIN ),
 				'add_new_item'  => __( 'Add Asset', RT_ASSET_TEXT_DOMAIN ),
 				'new_item'      => __( 'Add Asset', RT_ASSET_TEXT_DOMAIN ),
@@ -110,7 +110,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				),
 				array(
 					'slug'        => 'asset-faulty',
-					'name'        => __( 'faulty', RT_ASSET_TEXT_DOMAIN ),
+					'name'        => __( 'Faulty', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Unassigned Device, not healthy, needs replacement', RT_ASSET_TEXT_DOMAIN ),
 					'style'       => 'padding: 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
