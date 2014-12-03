@@ -73,6 +73,10 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 			<input type="hidden" name="rtasset_check_matabox" value="true">
 
 			<div class="row_group">
+				<span class="prefix" title="<?php _e( 'Unique ID', RT_ASSET_TEXT_DOMAIN ); ?>"><label><strong><?php _e( 'Unique ID : ', RT_ASSET_TEXT_DOMAIN ); ?></strong></label></span>
+				<span style="padding: 0px 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;"><?php echo esc_attr( $post->ID ); ?></span>
+			</div>
+			<div class="row_group">
 				<span class="prefix"
 				      title="<?php _e( 'Assigned To', RT_ASSET_TEXT_DOMAIN ); ?>"><label><strong><?php _e( 'Assigned To', RT_ASSET_TEXT_DOMAIN ); ?></strong></label></span>
 				<input type="text" name="author" id="rt-asset-assignee" class="user-autocomplete"
@@ -81,11 +85,14 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 					var arr_assignee_user =<?php echo json_encode( $arrAssigneeUser ); ?>;
 				</script>
 				<div id="selected_assignee"><?php
-			if ( ! empty( $author ) ) {
-						?>
-						<div id="rt-asset-assignee-<?php echo esc_attr( $author->ID ); ?>"><?php echo get_avatar( $author->user_email, 25 ) . esc_html( $author->display_name ); ?>
-							&nbsp;<a href="#removeAssignee">X</a><input type="hidden" name="post_author" value="<?php echo esc_attr( $author->ID ); ?>"/></div><?php
+			if ( ! empty( $author ) ) { ?>
+					<div id="rt-asset-assignee-<?php echo esc_attr( $author->ID ); ?>" class='assignee-list'>
+						<?php echo get_avatar( $author->user_email, 25 ) ?>
+						<a class='assignee-title heading' target='_blank' href=''><?php echo esc_html( $author->display_name ); ?></a><input type='hidden' name='post_author' value='<?php echo esc_attr( $author->ID ); ?>'/>
+						<a href='#removeAssignee' class='delete_row'>X</a>
+					</div><?php
 			} ?>
+
 				</div>
 			</div>
 
@@ -143,8 +150,11 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 				</script>
 				<div id="selected_vendor"><?php
 			if ( ! empty( $vendor ) ) { ?>
-						<div id="rt-asset-vendor-<?php echo esc_attr( $vendor->ID ); ?>"><?php echo get_avatar( $vendor->user_email, 25 ) . esc_html( $vendor->display_name ); ?>
-							&nbsp;<a href="#removeVendor">X</a><input type="hidden" name="post[rtasset_vendor]" value="<?php echo esc_attr( $vendor->ID ); ?>"/></div><?php
+					<div id="rt-asset-vendor-<?php echo esc_attr( $vendor->ID ); ?>" class='vendor-list'>
+						<?php echo get_avatar( $author->user_email, 25 ) ?>
+						<a class='vendor-title heading' target='_blank' href=''><?php echo esc_html( $vendor->display_name ); ?></a><input type='hidden' name='post[rtasset_vendor]' value='<?php echo esc_attr( $vendor->ID ); ?>'/>
+						<a href='#removeVendor' class='delete_row'>X</a>
+					</div><?php
 			} ?>
 				</div>
 			</div>

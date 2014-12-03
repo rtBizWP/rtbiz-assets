@@ -161,7 +161,7 @@ jQuery(function () {
 
                         },
                         select: function (event, ui) {
-                            jQuery("#selected_assignee").html("<div id='rt-asset-assignee-" + ui.item.id + "'>" + ui.item.imghtml + ui.item.label + "<a href='#removeAssignee'>X</a><input type='hidden' name='post_author' value='" + ui.item.id + "' /></div>")
+                            jQuery("#selected_assignee").html( "<div id='rt-asset-assignee-" + ui.item.id + "' class='assignee-list'>" + ui.item.imghtml + "<a class='assignee-title heading' target='_blank' href=''>"+ ui.item.label +"</a><input type='hidden' name='post_author' value='" + ui.item.id + "'/><a href='#removeAssignee' class='delete_row'>X</a></div>" );
                             jQuery("#rt-asset-assignee").val("");
                             return false;
                         }
@@ -196,8 +196,8 @@ jQuery(function () {
 
 	                      },
 	                      select: function (event, ui) {
-	                          jQuery("#selected_vendor").html("<div id='rt-asset-vendor-" + ui.item.id + "'>" + ui.item.imghtml + ui.item.label + "<a href='#removeVendor'>X</a><input type='hidden' name='post[rtasset_vendor]' value='" + ui.item.id + "' /></div>")
-	                          jQuery("#rt-asset-vendor").val("");
+		                      jQuery("#selected_vendor").html( "<div id='rt-asset-vendor-" + ui.item.id + "' class='vendor-list'>" + ui.item.imghtml + "<a class='vendor-title heading' target='_blank' href=''>"+ ui.item.label +"</a><input type='hidden' name='post[rtasset_vendor]' value='" + ui.item.id + "'/><a href='#removeVendor' class='delete_row'>X</a></div>" );
+		                      jQuery("#rt-asset-vendor").val("");
 	                          return false;
 	                      }
 	                 }).data("ui-autocomplete")._renderItem = function (ul, item) {
