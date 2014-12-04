@@ -37,6 +37,8 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 			add_action( 'rt_asset_process_' . RT_Asset_Module::$post_type . '_meta', 'RT_Meta_Box_Assets_Info::save', 10, 2 );
 
 			add_action( 'wp_before_admin_bar_render', 'RT_Meta_Box_Assets_Info::custom_post_status_rendar', 10 );
+
+			add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'assets_parent_ui' ), 10, 2 );
 		}
 
 		/**
@@ -119,7 +121,7 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 					if ( ! $flag ) {
 						$post_status = ucfirst( $post->post_status );
 					}
-					printf( '<mark style="%s" class="%s tips" data-tip="%s">%s</mark>', $style, $post_status, esc_html__( $post_status, RT_HD_PATH_ADMIN ), esc_html__( $post_status, RT_HD_PATH_ADMIN ) );
+					printf( '<mark style="%s" class="%s tips" data-tip="%s">%s</mark>', $style, $post_status, esc_html__( $post_status, RT_ASSET_TEXT_DOMAIN ), esc_html__( $post_status, RT_ASSET_TEXT_DOMAIN ) );
 					break;
 
 				case 'rtasset_asset_id':
@@ -192,6 +194,21 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 				die();
 			}
 
+		}
+
+		/**
+		 * add custom status in to parent assets UI
+		 *
+		 * @param $dropdown_args
+		 * @param $post
+		 *
+		 * @return mixed
+		 */
+		function assets_parent_ui( $dropdown_args, $post ){
+			if ( $post->post_type == RT_Asset_Module::$post_type ){
+				$dropdown_args['post_status'] = 'asset-unassigned';
+			}
+			return $dropdown_args;
 		}
 	}
 }

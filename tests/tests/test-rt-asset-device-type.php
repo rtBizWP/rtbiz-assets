@@ -83,15 +83,15 @@ class test_RT_Asset_Device_Type extends RT_WP_TestCase {
 	function  test_get_stock(){
 		$term_id = $this->factory->term->create( array( 'taxonomy' => 'rt_device-type' ) );
 		$term = get_term_by( 'id', $term_id, 'rt_device-type' );
-		$post = $this->factory->post->create( array( 'post_type' => 'rtbiz_asset_assets', 'post_status' => 'asset-assigned' ) );
+		$post = $this->factory->post->create( array( 'post_type' => RT_Asset_Module::$post_type, 'post_status' => 'asset-assigned' ) );
 		wp_set_post_terms( $post, array( $term_id ), 'rt_device-type' );
 		$this->assertEquals( 0, $this->rtassetDevicetype->get_stock( $term->name ) );
-		$post2 = $this->factory->post->create( array( 'post_type' => 'rtbiz_asset_assets', 'post_status' => 'asset-unassigned' ) );
+		$post2 = $this->factory->post->create( array( 'post_type' => RT_Asset_Module::$post_type, 'post_status' => 'asset-unassigned' ) );
 		wp_set_post_terms( $post2, array( $term_id ), 'rt_device-type' );
-		$post3 = $this->factory->post->create( array( 'post_type' => 'rtbiz_asset_assets', 'post_status' => 'asset-unassigned' ) );
+		$post3 = $this->factory->post->create( array( 'post_type' => RT_Asset_Module::$post_type, 'post_status' => 'asset-unassigned' ) );
 		wp_set_post_terms( $post3, array( $term_id ), 'rt_device-type' );
 		$this->assertEquals( 2, $this->rtassetDevicetype->get_stock( $term->name ) );
-		$post4 = $this->factory->post->create( array( 'post_type' => 'rtbiz_asset_assets', 'post_status' => 'asset-faulty' ) );
+		$post4 = $this->factory->post->create( array( 'post_type' => RT_Asset_Module::$post_type, 'post_status' => 'asset-faulty' ) );
 		wp_set_post_terms( $post4, array( $term_id ), 'rt_device-type' );
 		$this->assertEquals( 2, $this->rtassetDevicetype->get_stock( $term->name ) );
 	}

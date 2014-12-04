@@ -81,6 +81,10 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				'edit_item'     => __( 'Edit Asset', RT_ASSET_TEXT_DOMAIN ),
 				'view_item'     => __( 'View Asset', RT_ASSET_TEXT_DOMAIN ),
 				'search_items'  => __( 'Search Assets', RT_ASSET_TEXT_DOMAIN ),
+				'not_found'  => __( 'No Assets found', RT_ASSET_TEXT_DOMAIN ),
+				'not_found_in_trash'  => __( 'No Assets found in Trash', RT_ASSET_TEXT_DOMAIN ),
+				'parent_item_colon'  => __( 'Bundle', RT_ASSET_TEXT_DOMAIN ),
+				'parent'  => __( 'Bundle', RT_ASSET_TEXT_DOMAIN ),
 			);
 
 			return $this->labels;
@@ -180,6 +184,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				'public'             => true,
 				'publicly_queryable' => true,
 				'has_archive'        => true,
+				'hierarchical'       => true,
 				'rewrite'            => array(
 					'slug'       => strtolower( $this->labels['name'] ),
 					'with_front' => false,
@@ -187,7 +192,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				'show_ui'            => true, // Show the UI in admin panel
 				'menu_icon'          => ! empty( $settings['rtasset_logo_url']['url'] ) ? $settings['rtasset_logo_url']['url'] : '',
 				'menu_position'      => $menu_position,
-				'supports'           => array( 'title', 'editor', 'comments', 'revisions', 'thumbnail' ),
+				'supports'           => array( 'title', 'editor', 'comments', 'revisions', 'thumbnail', 'page-attributes' ),
 				'capability_type'    => self::$post_type,
 			);
 

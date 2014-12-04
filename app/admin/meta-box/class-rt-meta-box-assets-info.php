@@ -217,7 +217,7 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 				'_rtbiz_asset_purchase_date' => $newAsset['rtasset_purchase_date'],
 				'_rtbiz_asset_expiry_date' => $newAsset['rtasset_expiry_date'],
 				'_rtbiz_asset_warranty' => $newAsset['rtasset_warranty'],
-				'_rtbiz_asset_vendor' => $newAsset['rtasset_vendor'],
+				'_rtbiz_asset_vendor' => ! empty ( $newAsset['rtasset_vendor'] ) ? $newAsset['rtasset_vendor'] : '',
 			);
 
 			foreach ( $metaArray as $metakey => $metaval ) {

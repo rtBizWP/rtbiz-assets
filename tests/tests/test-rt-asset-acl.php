@@ -40,7 +40,7 @@ class test_RT_Asset_ACL extends RT_WP_TestCase {
 				array(
 					'rtbiz_assets' => array(
 						'label' => 'rtAssets',
-						'post_types' => array( 'rtbiz_asset_assets' ),
+						'post_types' => array( RT_Asset_Module::$post_type ),
 						'require_user_groups' => false,
 						'require_product_sync' => false,
 					)
