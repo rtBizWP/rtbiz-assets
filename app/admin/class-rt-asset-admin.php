@@ -9,13 +9,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Description of RT_Asset_Admin
  * RT_Asset_Admin is main class for admin backend and UI.
- * @author udit
+ *
+ * @author Dipesh
  * @since  rt-Assets 0.1
  */
 if ( ! class_exists( 'RT_Asset_Admin' ) ) {
+	/**
+	 * Class RT_Asset_Admin
+	 */
 	class RT_Asset_Admin {
+		/**
+		 * @var $admin_cap : capabilities for admin
+		 * @var $editor_cap : capabilities for editor
+		 * @var $author_cap : capabilities for author
+		 */
 		private $admin_cap, $editor_cap, $author_cap;
 
+		/**
+		 * construct
+		 *
+		 * @since rt-Assets 0.1
+		 */
 		public function __construct() {
 
 			$this->admin_cap  = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'admin' );
@@ -29,6 +43,7 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 
 		/**
 		 * Hooks
+		 *
 		 * @since rt-Assets 0.1
 		 */
 		function hooks() {
@@ -37,6 +52,7 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 
 		/**
 		 * Register CSS and JS
+		 *
 		 * @since rt-Assets 0.1
 		 */
 		function load_styles_scripts() {
@@ -72,6 +88,7 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 
 		/**
 		 * Passes data to JS
+		 *
 		 * @since rt-Assets 0.1
 		 */
 		function localize_scripts() {

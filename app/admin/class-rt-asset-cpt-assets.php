@@ -11,7 +11,7 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 	 * Class RT_Asset_CPT_Assets
 	 * Customise Assets CPT Add/edit Post view
 	 *
-	 * @since  0.1
+	 * @since  rt-Assets 0.1
 	 *
 	 * @author dipesh
 	 */
@@ -20,7 +20,7 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 		/**
 		 * Apply hook
 		 *
-		 * @since  0.1
+		 * @since  rt-Assets 0.1
 		 */
 		function __construct() {
 
@@ -40,11 +40,11 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 		}
 
 		/**
-		 * Edit Column list view on Tickets List view page
+		 * Edit Column list view on Assets List view page
 		 *
 		 * @param $cols
 		 *
-		 * @since  0.1
+		 * @since  rt-Assets 0.1
 		 *
 		 * @return array
 		 */
@@ -72,7 +72,7 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 		}
 
 		/**
-		 * Define new sortable columns for ticket list view
+		 * Define new sortable columns for Assets list view
 		 *
 		 * @since 0.1
 		 *
@@ -129,11 +129,10 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 			}
 		}
 
-
 		/**
-		 * Remove Default meta boxes on Edit post View for ticket
+		 * Remove Default meta boxes on Edit post View for Assets
 		 *
-		 * @since  0.1
+		 * @since  rt-Assets 0.1
 		 */
 		public function remove_meta_boxes() {
 			remove_meta_box( 'revisionsdiv', RT_Asset_Module::$post_type, 'normal' );
@@ -141,9 +140,9 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 		}
 
 		/**
-		 * Add custom meta boxes on Edit post View for ticket
+		 * Add custom meta boxes on Edit post View for Assets
 		 *
-		 * @since  0.1
+		 * @since  rt-Assets 0.1
 		 */
 		public function add_meta_boxes() {
 			add_meta_box( 'rt-asset-ticket-data', __( 'Asset Information', RT_ASSET_TEXT_DOMAIN ), 'RT_Meta_Box_Assets_Info::ui', RT_Asset_Module::$post_type, 'side', 'default' );
@@ -151,9 +150,9 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 		}
 
 		/**
-		 * Save custom meta boxes Values on Edit post View for ticket
+		 * Save custom meta boxes Values on Edit post View for Assets
 		 *
-		 * @since  0.1
+		 * @since  rt-Assets 0.1
 		 *
 		 * @param $post_id
 		 * @param $post

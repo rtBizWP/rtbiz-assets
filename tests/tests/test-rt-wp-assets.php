@@ -27,6 +27,7 @@ class test_RT_WP_Assets extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->rtwpAssets, 'init' ), 'Class RT_WP_Assets does not have method init' );
 		$this->assertTrue( method_exists( $this->rtwpAssets, 'load_scripts' ), 'Class RT_WP_Assets does not have method load_scripts' );
 		$this->assertTrue( method_exists( $this->rtwpAssets, 'localize_scripts' ), 'Class RT_WP_Assets does not have method localize_scripts' );
+		$this->assertTrue( method_exists( $this->rtwpAssets, 'assets_flush_rewrite_rules' ), 'Class RT_WP_Assets does not have method assets_flush_rewrite_rules' );
 	}
 
 	/**

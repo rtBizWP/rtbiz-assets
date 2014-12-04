@@ -7,18 +7,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Description of RT_HD_Admin_Meta_Boxes
+ * Description of RT_Asset_Admin_Meta_Boxes
  *
- * @since rt-Helpdesk 0.1
+ * @since rt-Assets 0.1
  */
 
 if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
+	/**
+	 * Class RT_Meta_Box_Assets_Info
+	 *
+	 * @author Dipesh
+	 * @since  rt-Assets 0.1
+	 */
 	class RT_Meta_Box_Assets_Info {
 
 		/**
-		 * Metabox Ui for ticket info
+		 * Metabox Ui for Assets info
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		public static function ui( $post ) {
 
@@ -167,7 +173,7 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 		/**
 		 * Save meta box data
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		public static function save( $post_id, $post ) {
 
@@ -221,6 +227,11 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 			}
 		}
 
+		/**
+		 * Render UI for custom post status
+		 *
+		 * @since rt-Assets 0.1
+		 */
 		public static function custom_post_status_rendar() {
 			global $post, $pagenow, $rt_asset_module;
 			$flag = false;

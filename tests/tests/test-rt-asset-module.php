@@ -30,7 +30,7 @@ class test_RT_Asset_Module extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->rtassetModule, 'register_custom_statuses' ), 'Class RT_Asset_Module does not have method register_custom_statuses' );
 		$this->assertTrue( method_exists( $this->rtassetModule, 'hooks' ), 'Class RT_Asset_Module does not have method hooks' );
 		$this->assertTrue( method_exists( $this->rtassetModule, 'custom_pages_order' ), 'Class RT_Asset_Module does not have method custom_pages_order' );
-		$this->assertTrue( method_exists( $this->rtassetModule, 'ticket_chnage_action_publish_update' ), 'Class RT_Asset_Module does not have method ticket_chnage_action_publish_update' );
+		$this->assertTrue( method_exists( $this->rtassetModule, 'assets_chnage_action_publish_update' ), 'Class RT_Asset_Module does not have method assets_chnage_action_publish_update' );
 	}
 
 	/**

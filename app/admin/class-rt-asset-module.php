@@ -9,10 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'RT_Asset_Module' ) ) {
 	/**
 	 * Class RT_Asset_Module
-	 * Register rtbiz-Assets CPT [ Ticket ] & statuses
-	 * Define connection with other post type [ person, organization ]
+	 * Register rtbiz-Assets CPT [ Assets ] & statuses
 	 *
-	 * @since  0.1
+	 * @since  rt-Assets 0.1
 	 *
 	 * @author Dipesh
 	 */
@@ -21,23 +20,23 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * @var string Stores Post Type
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		static $post_type = 'rtbiz_asset_assets';
 		/**
 		 * @var string used in mail subject title - to detect whether it's a Assets mail or not. So no translation
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
-		static $name = 'Assets';
+		var $name = 'Assets';
 		/**
-		 * @var array Labels for rtbiz-Assets CPT [ Ticket ]
+		 * @var array Labels for rtbiz-Assets CPT [ Assets ]
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		var $labels = array();
 		/**
-		 * @var array statuses for rtbiz-Assets CPT [ Ticket ]
+		 * @var array statuses for rtbiz-Assets CPT [ Assets ]
 		 *
 		 * @since 0.1
 		 */
@@ -45,14 +44,14 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * @var array Menu order for rtbiz-Assets
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		var $custom_menu_order = array();
 
 		/**
 		 * initiate class local Variables
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		public function __construct() {
 			$this->get_custom_labels();
@@ -63,9 +62,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		}
 
 		/**
-		 * get rtbiz-Assets CPT [ Ticket ] labels
+		 * get rtbiz-Assets CPT [ Assets ] labels
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @return array
 		 */
@@ -90,7 +89,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * get rtbiz-Assets CPT [ Asset ] statuses
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @return array
 		 */
@@ -134,7 +133,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * get menu order for rtbiz-Assets
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function get_custom_menu_order() {
 			global $rt_hd_attributes;
@@ -146,9 +145,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		}
 
 		/**
-		 * register rtbiz-Assets CPT [ Asset ] & define connection with other post type [ person, organization ]
+		 * register rtbiz-Assets CPT [ Asset ]
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function init_asset() {
 			$menu_position = 41;
@@ -165,9 +164,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		}
 
 		/**
-		 * Register CPT ( ticket )
+		 * Register CPT ( Assets )
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $menu_position
 		 *
@@ -196,9 +195,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		}
 
 		/**
-		 * Register Custom statuses for CPT ( ticket )
+		 * Register Custom statuses for CPT ( Assets )
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $status
 		 *
@@ -218,23 +217,23 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * set hooks
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function hooks() {
 			add_filter( 'custom_menu_order', array( $this, 'custom_pages_order' ) );
 
-			add_action( 'wp_before_admin_bar_render', array( $this, 'ticket_chnage_action_publish_update' ), 11 );
+			add_action( 'wp_before_admin_bar_render', array( $this, 'assets_chnage_action_publish_update' ), 11 );
 		}
 
 		/**
-		 * Change the publish action to update on Cpt-ticket add/edit page
+		 * Change the publish action to update on Cpt-assets add/edit page
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @global type $pagenow
 		 * @global type $post
 		 */
-		function ticket_chnage_action_publish_update() {
+		function assets_chnage_action_publish_update() {
 			global $pagenow, $post;
 			if ( get_post_type() == self::$post_type && ( 'post.php' === $pagenow || 'edit.php' === $pagenow || 'post-new.php' === $pagenow || 'edit' == ( isset( $_GET['action'] ) && $_GET['action'] ) ) ) {
 				if ( ! isset( $post ) ) {
@@ -260,7 +259,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * Customize menu item order
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $menu_order
 		 *

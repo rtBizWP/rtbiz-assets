@@ -14,7 +14,7 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 	 * Main class that initialize the rt-assets Classes.
 	 * Load Css/Js for front end
 	 *
-	 * @since  0.1
+	 * @since  rt-Assets 0.1
 	 *
 	 * @author dipesh
 	 */
@@ -23,14 +23,14 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 		/**
 		 * @var $templateURL is used to set template's root path
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		public $templateURL;
 
 		/**
 		 * Constructor of RT_WP_Assets checks dependency and initialize all classes and set all hooks for this class
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		public function __construct() {
 
@@ -50,7 +50,7 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 		/**
 		 * Initialize the global variables for all rtbiz-assets classes
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function init_globals() {
 			global $rt_asset_module, $rt_asset_device_type, $rt_asset_cpt_assets, $rt_asset_dashboard, $rt_asset_acl;
@@ -67,7 +67,7 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 		 * Admin_init sets admin UI and functionality,
 		 * initialize the database,
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function admin_init() {
 			$this->templateURL = apply_filters( 'rtasset_template_url', 'rtasset/' );
@@ -80,16 +80,28 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 		/**
 		 * Initialize the frontend
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function init() {
+			add_action( 'init', array( $this, 'assets_flush_rewrite_rules' ), 15 );
+		}
 
+		/**
+		 * Flush the rule
+		 *
+		 * @since rt-Assets 0.1
+		 */
+		function assets_flush_rewrite_rules() {
+			if ( is_admin() && 'true' == get_option( 'rtasset_flush_rewrite_rules' ) ) {
+				flush_rewrite_rules();
+				delete_option( 'rtasset_flush_rewrite_rules' );
+			}
 		}
 
 		/**
 		 * Register all js
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function load_scripts() {
 
@@ -98,7 +110,7 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 
 		/**
 		 * This is functions localize values for JScript
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function localize_scripts() {
 

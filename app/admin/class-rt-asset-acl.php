@@ -9,15 +9,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Description of RT_Asset_ACL
  *
- * @author udit
+ * @author Dipesh
  * @since  rt-Assets 0.1
  */
 if ( ! class_exists( 'RT_Asset_ACL' ) ) {
 	/**
 	 * Class RT_Asset_ACL
-	 * Add ACL(access control list) support to help desk plugin
+	 * Add ACL(access control list) support to Assets plugin
 	 *
-	 * @since 0.1
+	 * @since rt-Assets 0.1
 	 */
 	class RT_Asset_ACL {
 		/**
@@ -32,7 +32,7 @@ if ( ! class_exists( 'RT_Asset_ACL' ) ) {
 		/**
 		 * Register module rtbiz-Assets
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $modules
 		 *
