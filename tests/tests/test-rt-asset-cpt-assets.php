@@ -28,12 +28,18 @@ class test_RT_Asset_CPT_Assets extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->rtassetCptAssets, 'remove_meta_boxes' ), 'Class RT_Asset_CPT_Assets does not have method remove_meta_boxes' );
 		$this->assertTrue( method_exists( $this->rtassetCptAssets, 'add_meta_boxes' ), 'Class RT_Asset_CPT_Assets does not have method add_meta_boxes' );
 		$this->assertTrue( method_exists( $this->rtassetCptAssets, 'save_meta_boxes' ), 'Class RT_Asset_CPT_Assets does not have method save_meta_boxes' );
+	}
 
+	/**
+	 * Ensure that required Class exist
+	 */
+	function test_check_class_exist() {
+		$this->assertTrue( class_exists( 'RT_Asset_Module' ), 'Class RT_Asset_Module does not exist' );
 		$this->assertTrue( class_exists( 'RT_Meta_Box_Assets_Info' ), 'Class RT_Meta_Box_Assets_Info does not found' );
+
 		$this->assertTrue( method_exists( 'RT_Meta_Box_Assets_Info', 'save' ), 'Class RT_Meta_Box_Assets_Info does not have method save' );
 		$this->assertTrue( method_exists( 'RT_Meta_Box_Assets_Info', 'ui' ), 'Class RT_Meta_Box_Assets_Info does not have method ui' );
 		$this->assertTrue( method_exists( 'RT_Meta_Box_Assets_Info', 'custom_post_status_rendar' ), 'Class RT_Meta_Box_Assets_Info does not have method custom_post_status_rendar' );
-
 	}
 
 	/**

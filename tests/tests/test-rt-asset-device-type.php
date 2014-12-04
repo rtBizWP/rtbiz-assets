@@ -31,6 +31,13 @@ class test_RT_Asset_Device_Type extends RT_WP_TestCase {
 	}
 
 	/**
+	 * Ensure that required Class exist
+	 */
+	function test_check_class_exist() {
+		$this->assertTrue( class_exists( 'RT_Asset_Module' ), 'Class RT_Asset_Module does not exist' );
+	}
+
+	/**
 	 * Test get_custom_labels
 	 */
 	function test_get_custom_labels(){

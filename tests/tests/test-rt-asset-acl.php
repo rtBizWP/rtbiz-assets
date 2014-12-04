@@ -26,6 +26,13 @@ class test_RT_Asset_ACL extends RT_WP_TestCase {
 	}
 
 	/**
+	 * Ensure that required Class exist
+	 */
+	function test_check_class_exist() {
+		$this->assertTrue( class_exists( 'RT_Asset_Module' ), 'Class RT_Asset_Module does not exist' );
+	}
+
+	/**
 	 * Test register_rt_asset_module
 	 */
 	function  test_register_rt_asset_module() {

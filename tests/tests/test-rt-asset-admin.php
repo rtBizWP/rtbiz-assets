@@ -27,5 +27,12 @@ class test_RT_Asset_Admin extends RT_WP_TestCase {
 		$this->assertTrue( method_exists( $this->rtassetAdmin, 'localize_scripts' ), 'Class RT_Asset_Admin does not have method localize_scripts' );
 	}
 
+	/**
+	 * Ensure that required Class exist
+	 */
+	function test_check_class_exist() {
+		$this->assertTrue( class_exists( 'RT_Asset_Module' ), 'Class RT_Asset_Module does not exist' );
+	}
+
 }
  
