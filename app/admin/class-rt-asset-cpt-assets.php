@@ -205,8 +205,15 @@ if ( ! class_exists( 'RT_Asset_CPT_Assets' ) ) {
 		 * @return mixed
 		 */
 		function assets_parent_ui( $dropdown_args, $post ){
+			global $rt_asset_module;
 			if ( $post->post_type == RT_Asset_Module::$post_type ){
-				$dropdown_args['post_status'] = 'asset-unassigned';
+				$post_statuses = $rt_asset_module->get_custom_statuses();
+				$post_status = array();
+				foreach ( $post_statuses as $status ) {
+					$post_status[] = $status['slug'];
+				}
+
+				$dropdown_args['post_status'] = $post_status;
 			}
 			return $dropdown_args;
 		}
