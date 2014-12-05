@@ -13,6 +13,7 @@ jQuery(function () {
             rtassetAdmin.initattchmentJS();
             rtassetAdmin.initAssigneeSearch();
             rtassetAdmin.initVendorSearch();
+            rtassetAdmin.initradiotax();
         },
 
         initToolTop: function () {
@@ -213,7 +214,18 @@ jQuery(function () {
 		    } catch (e) {
 
 		    }
-	    }
+	    },
+	    initradiotax : function() {
+		    jQuery("input[name=tax_input\\[rt_device-type\\]\\[\\]]").click(function () {
+			    selected = jQuery("input[name=tax_input\\[rt_device-type\\]\\[\\]]").filter(":checked").length;
+			    if (selected > 1){
+				    jQuery("input[name=tax_input\\[rt_device-type\\]\\[\\]]").each(function () {
+					    jQuery(this).attr("checked", false);
+				    });
+				    jQuery(this).attr("checked", true);
+			    }
+		    });
+		}
     }
     rtassetAdmin.init();
 });

@@ -72,6 +72,8 @@ class test_RT_Asset_Device_Type extends RT_WP_TestCase {
 		$this->assertEquals(
 			array(
 				'stock' => 'In Stock',
+				'prefix' => 'Prefix',
+				'nextid' => 'Next ID',
 			),
 			$this->rtassetDevicetype->add_stock_column_header( array() )
 		);

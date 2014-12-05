@@ -62,11 +62,19 @@ if ( ! defined( 'RT_ASSET_PATH_ADMIN' ) ) {
 }
 if ( ! defined( 'RT_ASSET_PATH_HELPER' ) ) {
 	/**
-	 *  Defines app/vendor path if it does not exits.
+	 *  Defines app/helper path if it does not exits.
 	 *
 	 * @since rt-Assets 0.1
 	 */
 	define( 'RT_ASSET_PATH_HELPER', plugin_dir_path( __FILE__ ) . 'app/helper/' );
+}
+if ( ! defined( 'RT_ASSET_PATH_VENDOR' ) ) {
+	/**
+	 *  Defines app/vendor path if it does not exits.
+	 *
+	 * @since rt-Assets 0.1
+	 */
+	define( 'RT_ASSET_PATH_VENDOR', plugin_dir_path( __FILE__ ) . 'app/vendor/' );
 }
 
 include_once RT_ASSET_PATH_HELPER . 'rtasset-functions.php';
@@ -79,6 +87,7 @@ include_once RT_ASSET_PATH_HELPER . 'rtasset-functions.php';
 function rt_asset_include() {
 
 	//require_once RT_ASSET_PATH_VENDOR . 'redux/ReduxCore/framework.php';
+	require_once RT_ASSET_PATH_VENDOR . 'taxonomy-metadata.php';
 
 	global $rtast_app_autoload, $rtast_admin_autoload, $rtast_admin_metabox_autoload;
 	$rtast_app_autoload           = new RT_WP_Autoload( RT_ASSET_PATH_APP );

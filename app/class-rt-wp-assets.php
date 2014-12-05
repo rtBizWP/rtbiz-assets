@@ -61,6 +61,9 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 
 			$rt_asset_dashboard = new RT_Asset_Dashboard();
 			$rt_asset_acl       = new RT_Asset_ACL();
+
+			$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
+			$taxonomy_metadata->activate();
 		}
 
 		/**

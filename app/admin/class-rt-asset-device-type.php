@@ -73,6 +73,12 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 
 			add_filter( 'manage_edit-' . rtasset_attribute_taxonomy_name( $this->slug ) . '_columns', array( $this, 'add_stock_column_header' ) );
 			add_filter( 'manage_' . rtasset_attribute_taxonomy_name( $this->slug ) . '_custom_column', array( $this, 'add_stock_column_body' ), 10, 3 );
+
+			//add_action( rtasset_attribute_taxonomy_name( $this->slug ) . '_edit_form_fields', array( $this, 'add_taxonomy_custom_fields' ), 10, 2 );
+			add_action( rtasset_attribute_taxonomy_name( $this->slug ) . '_add_form_fields', array( $this, 'add_taxonomy_custom_fields' ), 10, 2 );
+
+			//add_action( 'edited_' . rtasset_attribute_taxonomy_name( $this->slug ), array( $this, 'save_taxonomy_custom_fields' ), 10, 2 );
+			add_action( 'created_' . rtasset_attribute_taxonomy_name( $this->slug ), array( $this, 'save_taxonomy_custom_fields' ), 10, 2 );
 		}
 
 		/**
@@ -86,7 +92,7 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 			$author_cap = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' );
 
 			register_taxonomy( rtasset_attribute_taxonomy_name( $this->slug ), array( RT_Asset_Module::$post_type ), array(
-				'hierarchical' => false,
+				'hierarchical' => true,
 				'labels' => $this->labels,
 				'show_ui' => true,
 				'show_admin_column' => true,
@@ -130,6 +136,8 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 		 */
 		function add_stock_column_header( $columns ) {
 			$columns['stock'] = __( 'In Stock' );
+			$columns['prefix'] = __( 'Prefix' );
+			$columns['nextid'] = __( 'Next ID' );
 			return $columns;
 		}
 
@@ -150,6 +158,14 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 				case 'stock':
 					$stock = $this->get_stock( $device_type->name );
 					$out .= "<a href='edit.php?rt_device-type=" . $device_type->slug . '&post_type=' . RT_Asset_Module::$post_type . "&post_status=asset-unassigned'>" . $stock . '</a>';
+					break;
+				case 'prefix':
+					$unique_prefix = Rt_Lib_Taxonomy_Metadata\get_term_meta( $devicetype_id, rtasset_attribute_taxonomy_name( $this->slug ) . '_unique_prefix', true );
+					$out .= $unique_prefix;
+					break;
+				case 'nextid':
+					$next_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $devicetype_id, rtasset_attribute_taxonomy_name( $this->slug ) . '_next_id', true );
+					$out .= $next_id;
 					break;
 				default:
 					break;
@@ -175,6 +191,51 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 			);
 			$stockquery = new WP_Query( $args );
 			return $stockquery->found_posts;
+		}
+
+		/**
+		 * Method to add custom field for taxonomy
+		 *
+		 * @since rt-Assets 0.1
+		 *
+		 * @param $tag
+		 *
+		 * @return mixed
+		 */
+		function add_taxonomy_custom_fields( $tag ) {
+			$unique_prefix = '';
+			if ( is_object( $tag ) ){
+				$term_id = $tag->term_id;
+				$unique_prefix = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, $tag->taxonomy . '_unique_prefix', true );
+			}?>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="unique_prefix"><?php _e( 'Prefix For Unique ID:' ); ?></label>
+				</th>
+				<td>
+					<input type="text" name="term_meta[unique_prefix]" id="unique_prefix" value="<?php echo esc_attr( $unique_prefix ?  $unique_prefix  : '' ); ?>"><br />
+					<span class="description"><?php _e( "if it's blank it will created automatically  [ First three characters of taxonomy name ]" ); ?></span>
+				</td>
+			</tr> <?php
+		}
+
+		function save_taxonomy_custom_fields( $term_id ) {
+			if ( isset( $_POST['term_meta'] ) ) {
+				if ( empty( $_POST['name'] ) ){
+					$_POST['name'] = $_POST['tag-name'];
+				}
+				if ( empty( $_POST['term_meta']['unique_prefix'] ) ){
+					$_POST['term_meta']['unique_prefix'] = trim( substr( $_POST['name'], 0, 3 ) );
+				}
+
+				$unique_prefix = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, $_POST['taxonomy'] . '_unique_prefix', true );
+				Rt_Lib_Taxonomy_Metadata\update_term_meta( $term_id, $_POST['taxonomy'] . '_unique_prefix', $_POST['term_meta']['unique_prefix'], $unique_prefix );
+
+				$next_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, $_POST['taxonomy'] . '_next_id', true );
+				if ( empty( $next_id ) ){
+					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, $_POST['taxonomy'] . '_next_id', '0' );
+				}
+			}
 		}
 
 	}
