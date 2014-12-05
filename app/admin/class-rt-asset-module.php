@@ -9,10 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'RT_Asset_Module' ) ) {
 	/**
 	 * Class RT_Asset_Module
-	 * Register rtbiz-Assets CPT [ Ticket ] & statuses
-	 * Define connection with other post type [ person, organization ]
+	 * Register rtbiz-Assets CPT [ Assets ] & statuses
 	 *
-	 * @since  0.1
+	 * @since  rt-Assets 0.1
 	 *
 	 * @author Dipesh
 	 */
@@ -21,23 +20,23 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * @var string Stores Post Type
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		static $post_type = 'rtbiz_asset_assets';
 		/**
 		 * @var string used in mail subject title - to detect whether it's a Assets mail or not. So no translation
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
-		static $name = 'Assets';
+		var $name = 'Assets';
 		/**
-		 * @var array Labels for rtbiz-Assets CPT [ Ticket ]
+		 * @var array Labels for rtbiz-Assets CPT [ Assets ]
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		var $labels = array();
 		/**
-		 * @var array statuses for rtbiz-Assets CPT [ Ticket ]
+		 * @var array statuses for rtbiz-Assets CPT [ Assets ]
 		 *
 		 * @since 0.1
 		 */
@@ -45,14 +44,14 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * @var array Menu order for rtbiz-Assets
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		var $custom_menu_order = array();
 
 		/**
 		 * initiate class local Variables
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		public function __construct() {
 			$this->get_custom_labels();
@@ -63,9 +62,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		}
 
 		/**
-		 * get rtbiz-Assets CPT [ Ticket ] labels
+		 * get rtbiz-Assets CPT [ Assets ] labels
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @return array
 		 */
@@ -75,13 +74,17 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				'name'          => __( 'Asset', RT_ASSET_TEXT_DOMAIN ),
 				'singular_name' => __( 'Asset', RT_ASSET_TEXT_DOMAIN ),
 				'menu_name'     => isset( $settings['rtasset_menu_label'] ) ? $settings['rtasset_menu_label'] : 'rtAssets',
-				'all_items'     => __( 'Assets', RT_ASSET_TEXT_DOMAIN ),
+				'all_items'     => __( 'All Assets', RT_ASSET_TEXT_DOMAIN ),
 				'add_new'       => __( 'Add Asset', RT_ASSET_TEXT_DOMAIN ),
 				'add_new_item'  => __( 'Add Asset', RT_ASSET_TEXT_DOMAIN ),
 				'new_item'      => __( 'Add Asset', RT_ASSET_TEXT_DOMAIN ),
 				'edit_item'     => __( 'Edit Asset', RT_ASSET_TEXT_DOMAIN ),
 				'view_item'     => __( 'View Asset', RT_ASSET_TEXT_DOMAIN ),
 				'search_items'  => __( 'Search Assets', RT_ASSET_TEXT_DOMAIN ),
+				'not_found'  => __( 'No Assets found', RT_ASSET_TEXT_DOMAIN ),
+				'not_found_in_trash'  => __( 'No Assets found in Trash', RT_ASSET_TEXT_DOMAIN ),
+				'parent_item_colon'  => __( 'Bundle', RT_ASSET_TEXT_DOMAIN ),
+				'parent'  => __( 'Bundle', RT_ASSET_TEXT_DOMAIN ),
 			);
 
 			return $this->labels;
@@ -90,7 +93,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * get rtbiz-Assets CPT [ Asset ] statuses
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @return array
 		 */
@@ -100,31 +103,31 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 					'slug'        => 'asset-assigned',
 					'name'        => __( 'Assigned', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device healthy and is assigned to a user.', RT_ASSET_TEXT_DOMAIN ),
-				    'style'       => 'padding: 5px; background: #FDD7E4; color: red; border: 1px solid red; border-radius: 5px;'
+					'style'       => 'padding: 3px; background: #FDD7E4; color: red; border: 1px solid red; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 				array(
 					'slug'        => 'asset-unassigned',
 					'name'        => __( 'Unassigned', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device healthy and is not assigned to any user. ', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #99FF99; color: #006600; border: 1px solid #006600; border-radius: 5px;'
+					'style'       => 'padding: 3px; background: #99FF99; color: #006600; border: 1px solid #006600; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 				array(
 					'slug'        => 'asset-faulty',
-					'name'        => __( 'faulty', RT_ASSET_TEXT_DOMAIN ),
+					'name'        => __( 'Faulty', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Unassigned Device, not healthy, needs replacement', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;'
+					'style'       => 'padding: 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 				array(
 					'slug'        => 'asset-needfix',
 					'name'        => __( 'NeedFix', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Assigned Device, not healthy, needs replacement', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;'
+					'style'       => 'padding: 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 				array(
 					'slug'        => 'asset-expired',
 					'name'        => __( 'Expired', RT_ASSET_TEXT_DOMAIN ),
 					'description' => __( 'Device is out of warranty', RT_ASSET_TEXT_DOMAIN ),
-					'style'       => 'padding: 5px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;'
+					'style'       => 'padding: 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;margin-top:15px;display:inline-block;',
 				),
 			);
 
@@ -134,7 +137,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * get menu order for rtbiz-Assets
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function get_custom_menu_order() {
 			global $rt_hd_attributes;
@@ -146,9 +149,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		}
 
 		/**
-		 * register rtbiz-Assets CPT [ Asset ] & define connection with other post type [ person, organization ]
+		 * register rtbiz-Assets CPT [ Asset ]
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function init_asset() {
 			$menu_position = 41;
@@ -165,9 +168,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		}
 
 		/**
-		 * Register CPT ( ticket )
+		 * Register CPT ( Assets )
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $menu_position
 		 *
@@ -181,14 +184,15 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				'public'             => true,
 				'publicly_queryable' => true,
 				'has_archive'        => true,
+				'hierarchical'       => true,
 				'rewrite'            => array(
 					'slug'       => strtolower( $this->labels['name'] ),
-				    'with_front' => false,
+					'with_front' => false,
 				),
 				'show_ui'            => true, // Show the UI in admin panel
-				'menu_icon'          => $settings['rtasset_logo_url']['url'],
+				'menu_icon'          => ! empty( $settings['rtasset_logo_url']['url'] ) ? $settings['rtasset_logo_url']['url'] : '',
 				'menu_position'      => $menu_position,
-				'supports'           => array( 'title', 'editor', 'comments', 'revisions', 'thumbnail' ),
+				'supports'           => array( 'title', 'editor', 'comments', 'revisions', 'thumbnail', 'page-attributes' ),
 				'capability_type'    => self::$post_type,
 			);
 
@@ -196,9 +200,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		}
 
 		/**
-		 * Register Custom statuses for CPT ( ticket )
+		 * Register Custom statuses for CPT ( Assets )
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $status
 		 *
@@ -218,25 +222,25 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * set hooks
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function hooks() {
 			add_filter( 'custom_menu_order', array( $this, 'custom_pages_order' ) );
 
-			add_action( 'wp_before_admin_bar_render', array( $this, 'ticket_chnage_action_publish_update' ), 11 );
+			add_action( 'wp_before_admin_bar_render', array( $this, 'assets_chnage_action_publish_update' ), 11 );
 		}
 
 		/**
-		 * Change the publish action to update on Cpt-ticket add/edit page
+		 * Change the publish action to update on Cpt-assets add/edit page
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @global type $pagenow
 		 * @global type $post
 		 */
-		function ticket_chnage_action_publish_update() {
+		function assets_chnage_action_publish_update() {
 			global $pagenow, $post;
-			if ( get_post_type() == self::$post_type && (  'post.php' === $pagenow ||'edit.php' === $pagenow || 'post-new.php' === $pagenow || 'edit' == ( isset( $_GET['action'] ) && $_GET['action'] ) ) ) {
+			if ( get_post_type() == self::$post_type && ( 'post.php' === $pagenow || 'edit.php' === $pagenow || 'post-new.php' === $pagenow || 'edit' == ( isset( $_GET['action'] ) && $_GET['action'] ) ) ) {
 				if ( ! isset( $post ) ) {
 					return;
 				}
@@ -260,7 +264,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		/**
 		 * Customize menu item order
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $menu_order
 		 *
@@ -277,7 +281,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 				$new_index = 5;
 				foreach ( $this->custom_menu_order as $item ) {
 					foreach ( $module_menu as $p_key => $menu_item ) {
-						$out = array_filter( $menu_item, function( $in ) { return true !== $in; } );
+						$out = array_filter( $menu_item, function ( $in ) {
+							return true !== $in;
+						} );
 						if ( in_array( $item, $out ) ) {
 							$submenu[ 'edit.php?post_type=' . self::$post_type ][ $new_index ] = $menu_item;
 							unset( $module_menu[ $p_key ] );
@@ -287,9 +293,9 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 					}
 				}
 				foreach ( $module_menu as $p_key => $menu_item ) {
-//					if ( $menu_item[2] != Redux_Framework_Helpdesk_Config::$page_slug ) {
-//						$menu_item[0] = '--- ' . $menu_item[0];
-//					}
+					//					if ( $menu_item[2] != Redux_Framework_Helpdesk_Config::$page_slug ) {
+					//						$menu_item[0] = '--- ' . $menu_item[0];
+					//					}
 					$submenu[ 'edit.php?post_type=' . self::$post_type ][ $new_index ] = $menu_item;
 					unset( $module_menu[ $p_key ] );
 					$new_index += 5;

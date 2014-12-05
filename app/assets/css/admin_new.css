@@ -92,7 +92,7 @@ img.tips {
 	padding: 10px 10px;
 }
 
-.row_group input, .row_group select {
+.row_group input[type='text'], .row_group select {
 	width: 100%;
 	vertical-align: top;
 	margin: 0;
@@ -100,10 +100,12 @@ img.tips {
 	line-height: 1.5em;
 }
 
-#divSubscriberList .contact-list {
-	display: inline-block;
-	text-align: center;
-	margin-right: 10px;
+.assignee-list, .vendor-list {
+	padding: 5px;
+	color: #404040;
+	border: 1px solid #4D9EBE;
+	border-radius: 5px;
+	margin-top: 10px;
 }
 
 #divAttachmentList .attachment-item {
@@ -111,21 +113,21 @@ img.tips {
 }
 
 .delete_row {
-	position: relative;
 	display: block;
 	float: right;
 	text-align: center;
 	color: #FFF;
-	background-color: #000;
-	border-radius: 100%;
-	padding: 0 5px;
+	background-color: #4D9EBE;
+	padding: 8px 5px;
 	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 	text-decoration: none;
-}
-
-#divSubscriberList .delete_row {
 	margin-left: -15px;
 	margin-top: -10px;
+}
+
+.delete_row:hover{
+	color: #ffffff;
+	background-color: #0074A2;
 }
 
 #divAttachmentList .delete_row, #external-files-container .delete_row {
@@ -141,8 +143,7 @@ img.tips {
 	margin-bottom: 10px;
 }
 
-
 /*Redux Setting Heder Css*/
 .redux-container #redux-header .display_header {
-    margin: 0;
+	margin: 0;
 }

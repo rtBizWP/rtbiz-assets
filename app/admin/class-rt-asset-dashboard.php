@@ -12,27 +12,29 @@ if ( ! class_exists( 'RT_Asset_Dashboard' ) ) {
 	 * Dashboard for Assets
 	 * render charts on deshboad
 	 *
-	 * @since 0.1
+	 * @since rt-Assets 0.1
+	 *
+	 * @author Dipesh
 	 */
 	class RT_Asset_Dashboard {
 
 		/**
 		 * @var string screen id for dashboard
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		var $screen_id;
 		/**
 		 * @var array store charts
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		var $charts = array();
 
 		/**
 		 * Construct
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		public function __construct() {
 			$this->screen_id = '';
@@ -42,7 +44,7 @@ if ( ! class_exists( 'RT_Asset_Dashboard' ) ) {
 		/**
 		 * Hook
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		public function hook() {
 			add_action( 'admin_menu', array( $this, 'register_dashboard' ), 1 );
@@ -51,7 +53,7 @@ if ( ! class_exists( 'RT_Asset_Dashboard' ) ) {
 		/**
 		 * Register dashboard for custom page & hook for MetaBox on it
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 */
 		function register_dashboard() {
 
@@ -67,7 +69,7 @@ if ( ! class_exists( 'RT_Asset_Dashboard' ) ) {
 		/**
 		 * render dashboard template for given post type
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $post_type
 		 */

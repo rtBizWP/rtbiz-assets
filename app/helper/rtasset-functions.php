@@ -36,8 +36,9 @@ function rtasset_update_post_term_count( $terms, $taxonomy ) {
 
 	$object_types = (array) $taxonomy->object_type;
 
-	foreach ( $object_types as &$object_type )
+	foreach ( $object_types as &$object_type ) {
 		list( $object_type ) = explode( ':', $object_type );
+	}
 
 	$object_types = array_unique( $object_types );
 
@@ -46,18 +47,21 @@ function rtasset_update_post_term_count( $terms, $taxonomy ) {
 		$check_attachments = true;
 	}
 
-	if ( $object_types )
+	if ( $object_types ) {
 		$object_types = esc_sql( array_filter( $object_types, 'post_type_exists' ) );
+	}
 
 	foreach ( (array) $terms as $term ) {
 		$count = 0;
 
 		// Attachments can be 'inherit' status, we need to base count off the parent's status if so
-		if ( $check_attachments )
+		if ( $check_attachments ) {
 			$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts p1 WHERE p1.ID = $wpdb->term_relationships.object_id  AND post_type = 'attachment' AND term_taxonomy_id = %d", $term ) );
+		}
 
-		if ( $object_types )
-			$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id  AND post_type IN ('" . implode("', '", $object_types ) . "') AND term_taxonomy_id = %d", $term ) );
+		if ( $object_types ) {
+			$count += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id  AND post_type IN ('" . implode( "', '", $object_types ) . "') AND term_taxonomy_id = %d", $term ) );
+		}
 
 		do_action( 'edit_term_taxonomy', $term, $taxonomy );
 		$wpdb->update( $wpdb->term_taxonomy, compact( 'count' ), array( 'term_taxonomy_id' => $term ) );
@@ -120,21 +124,27 @@ function rtasset_plugin_check_enque_js() {
  * @since 0.1
  */
 function rtasset_admin_notice_dependency_not_installed() {
-	if ( ! rtasset_is_plugin_installed( 'rtbiz' ) ) { ?>
+	if ( ! rtasset_is_plugin_installed( 'rtbiz' ) ) {
+		$path  = rtasset_get_path_for_plugin( 'rtbiz' );
+		?>
 		<div class="error rtasset-plugin-not-installed-error">
-			<p><b><?php _e( 'rtBiz Assets:' ) ?></b> <?php _e(  rtasset_get_path_for_plugin( 'rtbiz' ) .' plugin is not found on this site. Please install & activate it in order to use this plugin.', RT_ASSET_TEXT_DOMAIN ); ?></p>
+			<p>
+				<b><?php _e( 'rtBiz Assets:' ) ?></b> <?php _e( esc_attr( $path ) . ' plugin is not found on this site. Please install & activate it in order to use this plugin.', RT_ASSET_TEXT_DOMAIN ); ?>
+			</p>
 		</div>
-	<?php } else {
+	<?php
+	} else {
 		if ( rtasset_is_plugin_installed( 'rtbiz' ) && ! rtasset_is_plugin_active( 'rtbiz' ) ) {
 			$path  = rtasset_get_path_for_plugin( 'rtbiz' );
 			$nonce = wp_create_nonce( 'rtasset_activate_plugin_' . $path );
 			?>
 			<div class="error rtasset-plugin-not-installed-error">
-				<p><b><?php _e( 'rtBiz Assets:' ) ?></b> <?php _e( 'Click' ) ?> <a href="#"
-				                                                                     onclick="activate_rtasset_plugin('<?php echo $path ?>','rtasset_activate_plugin','<?php echo $nonce; ?>')">here</a> <?php _e( 'to activate rtBiz.', 'rtbiz' ) ?>
+				<p><b><?php _e( 'rtBiz Assets:' ) ?></b> <?php _e( 'Click' ) ?>
+					<a href="#" onclick="activate_rtasset_plugin('<?php echo esc_attr( $path ); ?>','rtasset_activate_plugin','<?php echo esc_attr( $nonce ); ?>')">here</a> <?php _e( 'to activate rtBiz.', 'rtbiz' ) ?>
 				</p>
 			</div>
-		<?php }
+		<?php
+		}
 	}
 }
 

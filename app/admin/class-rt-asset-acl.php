@@ -9,15 +9,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Description of RT_Asset_ACL
  *
- * @author udit
+ * @author Dipesh
  * @since  rt-Assets 0.1
  */
 if ( ! class_exists( 'RT_Asset_ACL' ) ) {
 	/**
 	 * Class RT_Asset_ACL
-	 * Add ACL(access control list) support to help desk plugin
+	 * Add ACL(access control list) support to Assets plugin
 	 *
-	 * @since 0.1
+	 * @since rt-Assets 0.1
 	 */
 	class RT_Asset_ACL {
 		/**
@@ -32,7 +32,7 @@ if ( ! class_exists( 'RT_Asset_ACL' ) ) {
 		/**
 		 * Register module rtbiz-Assets
 		 *
-		 * @since 0.1
+		 * @since rt-Assets 0.1
 		 *
 		 * @param $modules
 		 *
@@ -45,7 +45,7 @@ if ( ! class_exists( 'RT_Asset_ACL' ) ) {
 				'label'      => isset( $settings['rtasset_menu_label'] ) ? $settings['rtasset_menu_label'] : 'rtAssets',
 				'post_types' => array( RT_Asset_Module::$post_type ),
 				'require_user_groups' => false,
-			    'require_product_sync' => false,
+				'require_product_sync' => false,
 			);
 
 			return $modules;
