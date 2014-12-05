@@ -233,7 +233,7 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 
 				$next_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, $_POST['taxonomy'] . '_next_id', true );
 				if ( empty( $next_id ) ){
-					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, $_POST['taxonomy'] . '_next_id', '0' );
+					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, $_POST['taxonomy'] . '_next_id', '1' );
 				}
 			}
 		}

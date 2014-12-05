@@ -44,6 +44,8 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 
 			$arrVendorUser = $arrAssigneeUser;
 
+			$unique_id  = get_post_meta( $post->ID, '_rtbiz_asset_unique_id', true );
+
 			$serial_number  = get_post_meta( $post->ID, '_rtbiz_asset_serial_number', true );
 			$invoice_number = get_post_meta( $post->ID, '_rtbiz_asset_invoice_number', true );
 
@@ -78,9 +80,15 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 			</style>
 			<input type="hidden" name="rtasset_check_matabox" value="true">
 
+
 			<div class="row_group">
 				<span class="prefix" title="<?php _e( 'Unique ID', RT_ASSET_TEXT_DOMAIN ); ?>"><label><strong><?php _e( 'Unique ID : ', RT_ASSET_TEXT_DOMAIN ); ?></strong></label></span>
-				<span style="padding: 0px 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;"><?php echo esc_attr( $post->ID ); ?></span>
+			<?php if ( ! empty( $unique_id ) ){ ?>
+				<span style="padding: 0px 3px; background: #CCCCCC; color: #404040; border: 1px solid #404040; border-radius: 5px;"><?php echo esc_attr( $unique_id ); ?></span>
+			<?php } else { ?>
+				<br/>
+				<spna>Note:: it will created after assets created !!</spna>
+			<?php } ?>
 			</div>
 			<div class="row_group">
 				<span class="prefix"
@@ -176,6 +184,7 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 		 * @since rt-Assets 0.1
 		 */
 		public static function save( $post_id, $post ) {
+			global $rt_asset_device_type;
 
 			if ( isset( $_REQUEST['rtasset_check_matabox'] ) && 'true' == $_REQUEST['rtasset_check_matabox'] ) {
 				$newAsset = $_POST['post'];
@@ -220,9 +229,40 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 				'_rtbiz_asset_vendor' => ! empty ( $newAsset['rtasset_vendor'] ) ? $newAsset['rtasset_vendor'] : '',
 			);
 
+			//Unique ID
+			if ( ! empty( $_POST['tax_input'][ rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ][1] )  ){
+				$devicetype_id = $_POST['tax_input'][ rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ] [1];
+				$unique_prefix = Rt_Lib_Taxonomy_Metadata\get_term_meta( $devicetype_id, rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) . '_unique_prefix', true );
+				$next_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $devicetype_id, rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) . '_next_id', true );
+				$unique_id  = get_post_meta( $post->ID, '_rtbiz_asset_unique_id', true );
+				if ( empty( $unique_id ) || ! substr( $unique_id, 0, strlen( $unique_prefix ) ) == $unique_prefix ){
+					update_post_meta( $post_id, '_rtbiz_asset_unique_id', $unique_prefix . '_' . $next_id );
+					Rt_Lib_Taxonomy_Metadata\update_term_meta( $devicetype_id, rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) . '_next_id', $next_id + 1, $next_id );
+				}
+			}
+
 			foreach ( $metaArray as $metakey => $metaval ) {
 				if ( ! empty( $metaval ) ) {
 					update_post_meta( $post_id, $metakey, $metaval );
+				}
+			}
+
+			//child updated
+			if ( in_array( $_POST['post_status'], array( 'asset-unassigned', 'asset-assigned' ) ) ){
+				$args = array(
+					'post_parent' => $post_id,
+					'posts_per_page' => -1,
+					'post_type' => RT_Asset_Module::$post_type,
+				);
+				$childrens = get_children( $args,ARRAY_A );
+				foreach ( $childrens as $child ){
+					$child_args = array(
+						'ID' => $child['ID'],
+						'post_status' => $_POST['post_status'],
+						'post_author' => $_POST['post_author'],
+					);
+
+					wp_update_post( $child_args );
 				}
 			}
 		}
