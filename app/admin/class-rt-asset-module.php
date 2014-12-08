@@ -79,6 +79,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 			$columns['rtasset_asset_id']                                                           = '<span class="assetid_head tips" data-tip="' . esc_attr__( 'Unique ID', RT_ASSET_TEXT_DOMAIN ) . '">' . esc_attr__( 'ID', RT_ASSET_TEXT_DOMAIN ) . '</span>';
 			$columns['title']                                                                      = $cols['title'];
 			$columns['rtasset_asset_status']                                                       = '<span class="status_head tips" data-tip="' . esc_attr__( 'Status', RT_ASSET_TEXT_DOMAIN ) . '">' . esc_attr__( 'Status', RT_ASSET_TEXT_DOMAIN ) . '</span>';
+			$columns['rtasset_assignee']                                                           = '<span class="assignee_head tips" data-tip="' . esc_attr__( 'Assignee', RT_ASSET_TEXT_DOMAIN ) . '">' . esc_attr__( 'Assigned To', RT_ASSET_TEXT_DOMAIN ) . '</span>';
 			$columns[ 'taxonomy-' . rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ] = $cols[ 'taxonomy-' . rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ];
 			$columns['comments']                                                                   = $cols['comments'];
 			$columns['date']                                                                       = $cols['date'];
@@ -106,6 +107,7 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 		function sortable_column( $columns ) {
 			global $rt_asset_device_type;
 			$columns['rtasset_asset_status']                                                         = 'post_status';
+			$columns['rtasset_assignee']                                                         = 'post_author';
 			$columns[ 'taxonomy-' . rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ] = rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug );
 			$columns['rtasset_asset_id']                	                                         = 'post_id';
 			return $columns;
@@ -149,6 +151,21 @@ if ( ! class_exists( 'RT_Asset_Module' ) ) {
 					echo esc_attr( $post->ID );
 					break;
 
+				case 'rtasset_assignee':
+					$user_id   = $post->post_author;
+					$user_info = get_userdata( $user_id );
+					$url       = esc_url(
+						add_query_arg(
+							array(
+								'post_type'  => self::$post_type,
+								'author' => $user_id,
+							), 'edit.php' ) );
+					printf( __( '<span class="created-by tips" data-tip="%s">', RT_ASSET_TEXT_DOMAIN ), $user_info->user_email );
+					if ( $user_info ) {
+						printf( "<a href='%s'>%s</a>", $url, $user_info->user_login );
+					}
+					printf( '</span>' );
+					break;
 			}
 		}
 
