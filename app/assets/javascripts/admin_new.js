@@ -14,6 +14,7 @@ jQuery(function () {
             rtassetAdmin.initAssigneeSearch();
             rtassetAdmin.initVendorSearch();
             rtassetAdmin.initradiotax();
+            rtassetAdmin.initmenuhook();
         },
 
         initToolTop: function () {
@@ -225,7 +226,17 @@ jQuery(function () {
 				    jQuery(this).attr("checked", true);
 			    }
 		    });
-		}
+		},
+	    initmenuhook : function() {
+		    /*
+		     * WordPress Menu Hack for Edit Person & Edit Organization Page
+		     */
+		    if ( typeof rtbiz_asset_dashboard_screen != 'undefined' ) {
+			    jQuery('#'+rtbiz_asset_dashboard_screen).addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+			    jQuery('#'+rtbiz_asset_dashboard_screen+' a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
+			    jQuery(window).resize();
+		    }
+	    }
     }
     rtassetAdmin.init();
 });

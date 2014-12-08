@@ -24,6 +24,12 @@ if ( ! class_exists( 'RT_Asset_Dashboard' ) ) {
 		 * @since rt-Assets 0.1
 		 */
 		var $screen_id;
+
+		/**
+		 * @var string - rtBiz-asset Dashboard Page Slug
+		 */
+		public static $dashboard_slug = 'rt-biz-assets-dashboard';
+
 		/**
 		 * @var array store charts
 		 *
@@ -47,23 +53,6 @@ if ( ! class_exists( 'RT_Asset_Dashboard' ) ) {
 		 * @since rt-Assets 0.1
 		 */
 		public function hook() {
-			add_action( 'admin_menu', array( $this, 'register_dashboard' ), 1 );
-		}
-
-		/**
-		 * Register dashboard for custom page & hook for MetaBox on it
-		 *
-		 * @since rt-Assets 0.1
-		 */
-		function register_dashboard() {
-
-			$author_cap = rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' );
-
-			$this->screen_id = add_submenu_page( 'edit.php?post_type=' . esc_html( RT_Asset_Module::$post_type ), __( 'Dashboard', RT_ASSET_TEXT_DOMAIN ), __( 'Dashboard', RT_ASSET_TEXT_DOMAIN ), $author_cap, 'rtasset-' . esc_html( RT_Asset_Module::$post_type ) . '-dashboard', array(
-				$this,
-				'dashboard_ui',
-			) );
-
 		}
 
 		/**

@@ -29,11 +29,10 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 		public static function ui( $post ) {
 
 			$rtcamp_users       = get_rtasset_rtcamp_user();
-			$arrAssigneeUser[] = array();
-			$author             = get_user_by( 'id', $post->post_author );
+			$arrVendorUser[] = array();
 			if ( ! empty( $rtcamp_users ) ) {
 				foreach ( $rtcamp_users as $user ) {
-					$arrAssigneeUser[] = array(
+					$arrVendorUser[] = array(
 						'id' => $user->ID,
 						'label' => $user->display_name,
 						'imghtml' => get_avatar( $user->user_email, 24 ),
@@ -41,8 +40,6 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 					);
 				}
 			}
-
-			$arrVendorUser = $arrAssigneeUser;
 
 			$unique_id  = get_post_meta( $post->ID, '_rtbiz_asset_unique_id', true );
 
@@ -67,20 +64,6 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 
 			?>
 
-			<style type="text/css">
-				.hide {
-					display: none;
-				}
-			</style>
-
-			<style type="text/css">
-				#minor-publishing-actions, #visibility, .misc-pub-curtime, #post-status-display, .edit-post-status, .save-post-status.hide-if-no-js.button, .cancel-post-status, #misc-publishing-actions label {
-					display: none
-				}
-			</style>
-			<input type="hidden" name="rtasset_check_matabox" value="true">
-
-
 			<div class="row_group">
 				<span class="prefix" title="<?php _e( 'Unique ID', RT_ASSET_TEXT_DOMAIN ); ?>"><label><strong><?php _e( 'Unique ID : ', RT_ASSET_TEXT_DOMAIN ); ?></strong></label></span>
 			<?php if ( ! empty( $unique_id ) ){ ?>
@@ -89,25 +72,6 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 				<br/>
 				<spna>Note:: it will created after assets created !!</spna>
 			<?php } ?>
-			</div>
-			<div class="row_group">
-				<span class="prefix"
-				      title="<?php _e( 'Assigned To', RT_ASSET_TEXT_DOMAIN ); ?>"><label><strong><?php _e( 'Assigned To', RT_ASSET_TEXT_DOMAIN ); ?></strong></label></span>
-				<input type="text" name="author" id="rt-asset-assignee" class="user-autocomplete"
-				       placeholder="Search for User"/>
-				<script>
-					var arr_assignee_user =<?php echo json_encode( $arrAssigneeUser ); ?>;
-				</script>
-				<div id="selected_assignee"><?php
-			if ( ! empty( $author ) ) { ?>
-					<div id="rt-asset-assignee-<?php echo esc_attr( $author->ID ); ?>" class='assignee-list'>
-						<?php echo get_avatar( $author->user_email, 25 ) ?>
-						<a class='assignee-title heading' target='_blank' href=''><?php echo esc_html( $author->display_name ); ?></a><input type='hidden' name='post_author' value='<?php echo esc_attr( $author->ID ); ?>'/>
-						<a href='#removeAssignee' class='delete_row'>X</a>
-					</div><?php
-			} ?>
-
-				</div>
 			</div>
 
 			<div class="row_group">
@@ -165,7 +129,7 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 				<div id="selected_vendor"><?php
 			if ( ! empty( $vendor ) ) { ?>
 					<div id="rt-asset-vendor-<?php echo esc_attr( $vendor->ID ); ?>" class='vendor-list'>
-						<?php echo get_avatar( $author->user_email, 25 ) ?>
+						<?php echo get_avatar( $vendor->user_email, 25 ) ?>
 						<a class='vendor-title heading' target='_blank' href=''><?php echo esc_html( $vendor->display_name ); ?></a><input type='hidden' name='post[rtasset_vendor]' value='<?php echo esc_attr( $vendor->ID ); ?>'/>
 						<a href='#removeVendor' class='delete_row'>X</a>
 					</div><?php
@@ -185,6 +149,10 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 		 */
 		public static function save( $post_id, $post ) {
 			global $rt_asset_device_type;
+
+			if ( get_post_type( $post_id ) != RT_Asset_Module::$post_type ){
+				return;
+			}
 
 			if ( isset( $_REQUEST['rtasset_check_matabox'] ) && 'true' == $_REQUEST['rtasset_check_matabox'] ) {
 				$newAsset = $_POST['post'];
@@ -247,72 +215,6 @@ if ( ! class_exists( 'RT_Meta_Box_Assets_Info' ) ) {
 				}
 			}
 
-			//child updated
-			if ( in_array( $_POST['post_status'], array( 'asset-unassigned', 'asset-assigned' ) ) ){
-				$args = array(
-					'post_parent' => $post_id,
-					'posts_per_page' => -1,
-					'post_type' => RT_Asset_Module::$post_type,
-				);
-				$childrens = get_children( $args,ARRAY_A );
-				foreach ( $childrens as $child ){
-					$child_args = array(
-						'ID' => $child['ID'],
-						'post_status' => $_POST['post_status'],
-						'post_author' => $_POST['post_author'],
-					);
-
-					wp_update_post( $child_args );
-				}
-			}
-		}
-
-		/**
-		 * Render UI for custom post status
-		 *
-		 * @since rt-Assets 0.1
-		 */
-		public static function custom_post_status_rendar() {
-			global $post, $pagenow, $rt_asset_module;
-			$flag = false;
-			if ( isset( $post ) && ! empty( $post ) && $post->post_type === RT_Asset_Module::$post_type ) {
-				if ( 'edit.php' == $pagenow || 'post-new.php' == $pagenow ) {
-					$flag = true;
-				}
-			}
-			if ( isset( $post ) && ! empty( $post ) && 'post.php' == $pagenow && get_post_type( $post->ID ) === RT_Asset_Module::$post_type ) {
-				$flag = true;
-			}
-			if ( $flag ) {
-				$option      = '';
-				$post_status = $rt_asset_module->get_custom_statuses();
-				foreach ( $post_status as $status ) {
-					if ( $post->post_status == $status['slug'] ) {
-						$complete = " selected='selected'";
-					} else {
-						$complete = '';
-					}
-					$option .= "<option value='" . $status['slug'] . "' " . $complete . '>' . $status['name'] . '</option>';
-				}
-
-				if ( $post->post_status == 'draft' ) {
-					$complete = " selected='selected'";
-				} else {
-					$complete = '';
-				}
-				$option .= "<option value='draft' " . $complete . '>Draft</option>';
-
-				echo '<script>
-                        jQuery(document).ready(function($) {
-                            $("select#post_status").html("' . balanceTags( $option ) . '");
-                            $(".inline-edit-status select").html("' . balanceTags( $option ) . '");
-
-                            $(document).on("change","#rthd_post_status",function(){
-                                $("#post_status").val($(this).val());
-                            });
-                               });
-                        </script>';
-			}
 		}
 	}
 }

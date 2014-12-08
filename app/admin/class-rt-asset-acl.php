@@ -43,7 +43,7 @@ if ( ! class_exists( 'RT_Asset_ACL' ) ) {
 			$module_key             = rt_biz_sanitize_module_key( RT_ASSET_TEXT_DOMAIN );
 			$modules[ $module_key ] = array(
 				'label'      => isset( $settings['rtasset_menu_label'] ) ? $settings['rtasset_menu_label'] : 'rtAssets',
-				'post_types' => array( RT_Asset_Module::$post_type ),
+				'post_types' => array( RT_Asset_Module::$post_type, RT_Asset_Bundle_Module::$post_type ),
 				'require_user_groups' => false,
 				'require_product_sync' => false,
 			);

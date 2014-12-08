@@ -43,6 +43,8 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 			add_action( 'init', array( $this, 'admin_init' ), 5 );
 			add_action( 'init', array( $this, 'init' ), 6 );
 
+			add_action( 'admin_menu', array( $this, 'register_menu' ), 1 );
+
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 
 		}
@@ -53,11 +55,11 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 		 * @since rt-Assets 0.1
 		 */
 		function init_globals() {
-			global $rt_asset_module, $rt_asset_device_type, $rt_asset_cpt_assets, $rt_asset_dashboard, $rt_asset_acl;
+			global $rt_asset_module, $rt_asset_bundle_module, $rt_asset_device_type, $rt_asset_cpt_assets, $rt_asset_dashboard, $rt_asset_acl;
 
 			$rt_asset_module      = new RT_Asset_Module();
+			$rt_asset_bundle_module = new RT_Asset_Bundle_Module();
 			$rt_asset_device_type = new RT_Asset_Device_Type();
-			$rt_asset_cpt_assets  = new RT_Asset_CPT_Assets();
 
 			$rt_asset_dashboard = new RT_Asset_Dashboard();
 			$rt_asset_acl       = new RT_Asset_ACL();
@@ -77,8 +79,99 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 
 			global $rt_asset_admin;
 			$rt_asset_admin = new RT_Asset_Admin();
+
+			$this->register_bundle_asset_connection();
 		}
 
+		/**
+		 *  Registers Posts 2 Posts relation for Bundle - Asset
+		 */
+		function register_bundle_asset_connection() {
+			add_action( 'p2p_init', array( $this, 'bundle_asset_connection' ) );
+		}
+
+		/**
+		 *  Bundle - Asset Connection for Posts 2 Posts
+		 */
+		function bundle_asset_connection() {
+			p2p_register_connection_type(
+				array(
+					'name' => RT_Asset_Bundle_Module::$post_type . '_to_' . RT_Asset_Module::$post_type,
+					'from' => RT_Asset_Bundle_Module::$post_type,
+					'to'   => RT_Asset_Module::$post_type,
+				)
+			);
+		}
+
+		/**
+		 *  This establishes a connection between any entiy ( either organization - from / person - to )
+		 *  acording to the parameters passed.
+		 *
+		 * @param string $from - Organization
+		 * @param string $to   - Person
+		 */
+		function connect_bundle_to_asset( $from = '', $to = '' ) {
+
+			if ( ! p2p_connection_exists( RT_Asset_Bundle_Module::$post_type . '_to_' . RT_Asset_Module::$post_type, array(
+				'from' => $from,
+				'to'   => $to,
+			) )
+			) {
+				p2p_create_connection( RT_Asset_Bundle_Module::$post_type . '_to_' . RT_Asset_Module::$post_type, array(
+					'from' => $from,
+					'to'   => $to,
+				) );
+			}
+		}
+
+		/**
+		 *  Returns all the connected posts to the passed parameter entity object.
+		 *  It can be either an organization object or a person object.
+		 *
+		 *  It will return the other half objects of the connection.
+		 *
+		 * @param $connected_items - Organization / Person Object
+		 *
+		 * @return array
+		 */
+		function get_bundle_to_asset_connection( $connected_items ) {
+			return get_posts(
+				array(
+					'connected_type'   => RT_Asset_Bundle_Module::$post_type . '_to_' . RT_Asset_Module::$post_type,
+					'connected_items'  => $connected_items,
+					'nopaging'         => true,
+					'suppress_filters' => false,
+					'post_status' => 'any',
+				)
+			);
+		}
+
+		/**
+		 *  Registers all the menus/submenus for rtBiz-assets
+		 */
+		function register_menu() {
+			global $rt_asset_dashboard, $rt_asset_module, $rt_asset_bundle_module, $rt_asset_device_type;
+			$menu_position = 41;
+			$logo_url               = '';
+			$menu_label             = 'Assets';
+
+			$bundle_label = $rt_asset_bundle_module->get_custom_labels();
+			$asset_label = $rt_asset_module->get_custom_labels();
+			$devicetype_label = $rt_asset_device_type->get_custom_labels();
+
+			$rt_asset_dashboard->screen_id = add_menu_page( $menu_label, $menu_label, rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' ), RT_Asset_Dashboard::$dashboard_slug, array(
+				$rt_asset_dashboard,
+				'dashboard_ui',
+			), $logo_url, $menu_position );
+
+			add_submenu_page( RT_Asset_Dashboard::$dashboard_slug, $bundle_label['name'], $bundle_label['name'], rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . RT_Asset_Bundle_Module::$post_type );
+			add_submenu_page( RT_Asset_Dashboard::$dashboard_slug, $bundle_label['add_new'], '--- '.$bundle_label['add_new'], rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' ), 'post-new.php?post_type=' . RT_Asset_Bundle_Module::$post_type );
+
+			add_submenu_page( RT_Asset_Dashboard::$dashboard_slug, $asset_label['name'], $asset_label['name'], rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' ), 'edit.php?post_type=' . RT_Asset_Module::$post_type );
+			add_submenu_page( RT_Asset_Dashboard::$dashboard_slug, $asset_label['add_new'], '--- '.$asset_label['add_new'], rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'author' ), 'post-new.php?post_type=' . RT_Asset_Module::$post_type );
+
+			add_submenu_page( RT_Asset_Dashboard::$dashboard_slug, $devicetype_label['name'], $devicetype_label['name'], rt_biz_get_access_role_cap( RT_ASSET_TEXT_DOMAIN, 'editor' ), 'edit-tags.php?taxonomy=' . rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) . '&post_type=' . RT_Asset_Module::$post_type );
+		}
 
 		/**
 		 * Initialize the frontend

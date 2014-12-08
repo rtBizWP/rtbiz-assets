@@ -58,7 +58,7 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 		function load_styles_scripts() {
 			global $post, $pagenow, $wp_scripts;
 
-			if ( isset( $post->post_type ) && $post->post_type == RT_Asset_Module::$post_type ) {
+			if ( isset( $post->post_type ) && in_array( $post->post_type, array( RT_Asset_Module::$post_type, RT_Asset_Bundle_Module::$post_type ) ) ) {
 
 				wp_enqueue_script( 'jquery-ui-timepicker-addon', RT_ASSET_URL . 'app/assets/javascripts/jquery-ui-timepicker-addon.js', array(
 					'jquery-ui-datepicker',
@@ -92,14 +92,20 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 		 * @since rt-Assets 0.1
 		 */
 		function localize_scripts() {
-			global $pagenow;
+			global $pagenow, $rt_asset_dashboard;
 			if ( in_array( $pagenow, array( 'edit.php', 'post.php', 'post-new.php' ) ) ) {
 				$user_edit = false;
-				if ( current_user_can( 'edit_' . RT_Asset_Module::$post_type ) ) {
+				$rtasset_post_type = isset( $_GET['post'] ) ? get_post_type( $_GET['post'] ) : '';
+				if ( ! in_array( $rtasset_post_type, array( RT_Asset_Module::$post_type, RT_Asset_Bundle_Module::$post_type ) ) ){
+					return;
+				}
+				if ( current_user_can( 'edit_' . $rtasset_post_type ) ) {
 					$user_edit = true;
 				}
+				if ( isset( $_REQUEST['post'] ) ) {
+					wp_localize_script( 'rtasset-admin-js', 'rtbiz_asset_dashboard_screen', $rt_asset_dashboard->screen_id );
+				}
 				wp_localize_script( 'rtasset-admin-js', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
-				$rtasset_post_type = isset( $_GET['post'] ) ? get_post_type( $_GET['post'] ) : '';
 				wp_localize_script( 'rtasset-admin-js', 'rtasset_post_type', $rtasset_post_type );
 				wp_localize_script( 'rtasset-admin-js', 'rtasset_user_edit', array( $user_edit ) );
 			} else {
