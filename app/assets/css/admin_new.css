@@ -108,6 +108,10 @@ img.tips {
 	margin-top: 10px;
 }
 
+.assignee-list .avatar, .vendor-list .avatar{
+	border-radius: 20px;
+}
+
 #divAttachmentList .attachment-item {
 	background: #F8F8F8;
 }
