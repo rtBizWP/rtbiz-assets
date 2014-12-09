@@ -229,11 +229,28 @@ jQuery(function () {
 		},
 	    initmenuhook : function() {
 		    /*
-		     * WordPress Menu Hack for Edit Person & Edit Organization Page
+		     * WordPress Menu Hack for Edit bundle & Edit asset Page
 		     */
-		    if ( typeof rtbiz_asset_dashboard_screen != 'undefined' ) {
+		    if ( typeof rtbiz_asset_dashboard_screen != 'undefined' && typeof rtbiz_asset_module_new_page != 'undefined' ) {
 			    jQuery('#'+rtbiz_asset_dashboard_screen).addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
 			    jQuery('#'+rtbiz_asset_dashboard_screen+' a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
+			    jQuery(window).resize();
+		    }
+
+		    /**
+		     * WordPress Menu Hack for Devvice type Menu Page ( Taxonomy Page )
+		     */
+		    if ( typeof rtbiz_asset_dashboard_screen != 'undefined' && typeof rtbiz_asset_device_type_url != 'undefined' ) {
+			    jQuery('#menu-posts').removeClass('wp-menu-open wp-has-current-submenu').addClass('wp-not-current-submenu');
+			    jQuery('#menu-posts a.wp-has-submenu').removeClass('wp-has-current-submenu wp-menu-open menu-top');
+			    jQuery('#'+rtbiz_asset_dashboard_screen).addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+			    jQuery('#'+rtbiz_asset_dashboard_screen+' a.wp-has-submenu').addClass('wp-has-current-submenu wp-menu-open menu-top');
+			    jQuery('li#'+rtbiz_asset_dashboard_screen+' ul li a').each(function(e) {
+				    if ( this.href == rtbiz_asset_device_type_url ) {
+					    jQuery(this).parent().addClass("current");
+					    jQuery(this).addClass('current');
+				    }
+			    });
 			    jQuery(window).resize();
 		    }
 	    }
