@@ -94,16 +94,6 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 		function localize_scripts() {
 			global $pagenow, $rt_asset_dashboard, $rt_asset_device_type;
 
-			///menu Hack For Edit bundle & Edit asset Page
-			if ( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post-new.php' && isset( $_REQUEST['post_type'] ) && in_array( $_REQUEST['post_type'], array(
-					RT_Asset_Module::$post_type,
-					RT_Asset_Bundle_Module::$post_type,
-				) )
-			) {
-				wp_localize_script( 'rtasset-admin-js', 'rtbiz_asset_module_new_page', admin_url( 'edit.php?post_type=' . $_REQUEST['post_type'] ) );
-				wp_localize_script( 'rtasset-admin-js', 'rtbiz_asset_dashboard_screen', $rt_asset_dashboard->screen_id );
-			}
-
 			//Menu Hack for Devvice type Menu Page ( Taxonomy Page )
 			if ( isset( $_REQUEST['taxonomy'] ) && $_REQUEST['taxonomy'] == rtasset_attribute_taxonomy_name( $rt_asset_device_type->slug ) ) {
 				wp_localize_script( 'rtasset-admin-js', 'rtbiz_asset_dashboard_screen', $rt_asset_dashboard->screen_id );
@@ -113,11 +103,22 @@ if ( ! class_exists( 'RT_Asset_Admin' ) ) {
 			if ( in_array( $pagenow, array( 'edit.php', 'post.php', 'post-new.php' ) ) ) {
 				$user_edit = false;
 				$rtasset_post_type = isset( $_GET['post'] ) ? get_post_type( $_GET['post'] ) : '';
+
 				if ( ! in_array( $rtasset_post_type, array( RT_Asset_Module::$post_type, RT_Asset_Bundle_Module::$post_type ) ) ){
 					return;
 				}
 				if ( current_user_can( 'edit_' . $rtasset_post_type ) ) {
 					$user_edit = true;
+				}
+
+				//menu Hack For Edit bundle & Edit asset Page
+				if ( $_SERVER['SCRIPT_NAME'] == '/wp-admin/post.php' && isset( $rtasset_post_type ) && in_array( $rtasset_post_type, array(
+						RT_Asset_Module::$post_type,
+						RT_Asset_Bundle_Module::$post_type,
+					) )
+				) {
+					wp_localize_script( 'rtasset-admin-js', 'rtbiz_asset_module_new_page', admin_url( 'edit.php?post_type=' . $rtasset_post_type ) );
+					wp_localize_script( 'rtasset-admin-js', 'rtbiz_asset_dashboard_screen', $rt_asset_dashboard->screen_id );
 				}
 
 				wp_localize_script( 'rtasset-admin-js', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
