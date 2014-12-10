@@ -55,7 +55,7 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 		 * @since rt-Assets 0.1
 		 */
 		function init_globals() {
-			global $rt_asset_module, $rt_asset_bundle_module, $rt_asset_device_type, $rt_asset_cpt_assets, $rt_asset_dashboard, $rt_asset_acl;
+			global $rt_asset_module, $rt_asset_bundle_module, $rt_asset_device_type, $rt_asset_dashboard, $rt_asset_acl, $rt_asset_setting;
 
 			$rt_asset_module      = new RT_Asset_Module();
 			$rt_asset_bundle_module = new RT_Asset_Bundle_Module();
@@ -63,6 +63,7 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 
 			$rt_asset_dashboard = new RT_Asset_Dashboard();
 			$rt_asset_acl       = new RT_Asset_ACL();
+			$rt_asset_setting   = new RT_Asset_Settings();
 
 			$taxonomy_metadata = new Rt_Lib_Taxonomy_Metadata\Taxonomy_Metadata();
 			$taxonomy_metadata->activate();
@@ -151,9 +152,12 @@ if ( ! class_exists( 'RT_WP_Assets' ) ) {
 		 */
 		function register_menu() {
 			global $rt_asset_dashboard, $rt_asset_module, $rt_asset_bundle_module, $rt_asset_device_type;
+
+			$settings = rtasset_get_redux_settings();
+
 			$menu_position = 41;
-			$logo_url               = '';
-			$menu_label             = 'Assets';
+			$logo_url               = isset( $settings['rtasset_logo_url'] ) ? $settings['rtasset_logo_url']['url'] : RT_ASSET_URL . 'app/assets/img/asset-16X16.png';
+			$menu_label             = isset( $settings['rtasset_menu_label'] ) ? $settings['rtasset_menu_label'] : 'rtAsset';
 
 			$bundle_label = $rt_asset_bundle_module->get_custom_labels();
 			$asset_label = $rt_asset_module->get_custom_labels();
