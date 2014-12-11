@@ -130,8 +130,8 @@ if ( ! class_exists( 'RT_Asset_Entity' ) ) {
 		function register_post_type( $name, $labels = array() ) {
 			$args = array(
 				'labels' => $labels,
-				'public' => false,
-				'publicly_queryable' => false,
+				'public' => true,
+				'publicly_queryable' => true,
 				'show_ui' => true, // Show the UI in admin panel
 				'show_in_nav_menus' => false,
 				'show_in_menu' => false,
@@ -180,7 +180,6 @@ if ( ! class_exists( 'RT_Asset_Entity' ) ) {
 			add_filter( 'manage_edit-' . $this->post_type_slug . '_sortable_columns', array( $this, 'sortable_column' ) );
 			add_action( 'manage_' . $this->post_type_slug . '_posts_custom_column', array( $this, 'manage_custom_columns' ), 2 );
 
-
 			// CPT Edit/Add View
 			add_action( 'add_meta_boxes', array( $this, 'remove_meta_boxes' ), 10 );
 			add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 30 );
@@ -188,7 +187,7 @@ if ( ! class_exists( 'RT_Asset_Entity' ) ) {
 			add_action( 'save_post', array( $this, 'save_meta_boxes' ), 1, 2 );
 			add_action( 'rt_asset_process_' . $this->post_type_slug . '_meta', array( $this, 'save_rt_assets_meta_boxes' ), 10, 2 );
 
-			add_action( 'wp_before_admin_bar_render', array( $this, 'custom_post_status_rendar'), 10 );
+			add_action( 'wp_before_admin_bar_render', array( $this, 'custom_post_status_rendar' ), 10 );
 		}
 
 		/**

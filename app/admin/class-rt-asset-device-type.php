@@ -229,9 +229,26 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 				}
 
 				$unique_prefix = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, $_POST['taxonomy'] . '_unique_prefix', true );
-				if ( empty( $unique_prefix ) ){
+
+				if ( $unique_prefix != $_POST['term_meta']['unique_prefix'] ){
 					Rt_Lib_Taxonomy_Metadata\update_term_meta( $term_id, $_POST['taxonomy'] . '_unique_prefix', $_POST['term_meta']['unique_prefix'], $unique_prefix );
+					if ( $_POST['action'] == 'editedtag' ){
+						$args       = array(
+							'post_type' => RT_Asset_Module::$post_type,
+							rtasset_attribute_taxonomy_name( $this->slug ) => $_POST['name'],
+						);
+						$asset_query = new WP_Query( $args );
+						if ( $asset_query->have_posts() ) {
+							while ( $asset_query->have_posts() ) {
+								$asset_query->the_post();
+								$old_unique_id = get_post_meta( get_the_ID(), '_rtbiz_asset_unique_id', true );
+								$new_unique_id = str_replace( $unique_prefix, $_POST['term_meta']['unique_prefix'], $old_unique_id );
+								update_post_meta( get_the_ID(), '_rtbiz_asset_unique_id', $new_unique_id, $old_unique_id );
+							}
+						}
+					}
 				}
+
 				$next_id = Rt_Lib_Taxonomy_Metadata\get_term_meta( $term_id, $_POST['taxonomy'] . '_next_id', true );
 				if ( empty( $next_id ) ){
 					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, $_POST['taxonomy'] . '_next_id', '1' );
