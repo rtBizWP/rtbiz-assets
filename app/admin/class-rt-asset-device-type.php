@@ -79,6 +79,8 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 
 			add_action( 'edited_' . rtasset_attribute_taxonomy_name( $this->slug ), array( $this, 'save_taxonomy_custom_fields' ), 10, 2 );
 			add_action( 'created_' . rtasset_attribute_taxonomy_name( $this->slug ), array( $this, 'save_taxonomy_custom_fields' ), 10, 2 );
+
+			add_action( 'delete_' . rtasset_attribute_taxonomy_name( $this->slug ), array( $this, 'delete_taxonomy_custom_fields' ), 10, 2 );
 		}
 
 		/**
@@ -254,6 +256,11 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 					Rt_Lib_Taxonomy_Metadata\add_term_meta( $term_id, $_POST['taxonomy'] . '_next_id', '1' );
 				}
 			}
+		}
+
+		function delete_taxonomy_custom_fields( $term_id, $tt_id ){
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, rtasset_attribute_taxonomy_name( $this->slug ) . '_next_id' );
+			Rt_Lib_Taxonomy_Metadata\delete_term_meta( $term_id, rtasset_attribute_taxonomy_name( $this->slug ) . '_unique_prefix' );
 		}
 
 	}
