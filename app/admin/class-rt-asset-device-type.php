@@ -156,7 +156,7 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 			$device_type = get_term( $devicetype_id, rtasset_attribute_taxonomy_name( $this->slug ) );
 			switch ( $column_name ) {
 				case 'stock':
-					$stock = $this->get_stock( $device_type->name );
+					$stock = $this->get_stock( $device_type->slug );
 					$out .= "<a href='edit.php?rt_device-type=" . $device_type->slug . '&post_type=' . RT_Asset_Module::$post_type . "&post_status=asset-unassigned'>" . $stock . '</a>';
 					break;
 				case 'prefix':
@@ -235,7 +235,7 @@ if ( ! class_exists( 'RT_Asset_Device_Type' ) ) {
 					if ( $_POST['action'] == 'editedtag' ){
 						$args       = array(
 							'post_type' => RT_Asset_Module::$post_type,
-							rtasset_attribute_taxonomy_name( $this->slug ) => $_POST['name'],
+							rtasset_attribute_taxonomy_name( $this->slug ) => $_POST['slug'],
 						);
 						$asset_query = new WP_Query( $args );
 						if ( $asset_query->have_posts() ) {
